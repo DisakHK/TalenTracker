@@ -1,66 +1,149 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+    <title>Registro - Talent Tracker</title>
+    <!-- Incluir Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            500: '#10b981',
+                            600: '#059669'
+                        }
+                    }
+                }
+            }
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        .errorlist {
-            color: red;
-        }
-    </style>
+    </script>
+    <!-- Incluir iconos de Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
-    <h1>Registro</h1>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ form.username.label_tag }}
-            {{ form.username }}
-            {{ form.username.errors }}
+<body class="min-h-screen bg-gray-50">
+    <!-- Barra de navegación -->
+    <nav class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold">
+                    <span class="text-green-500">magneto</span>
+                    <span class="text-gray-700">Tracker</span>
+                </h1>
+            </div>
         </div>
-        <div class="form-group">
-            {{ form.email.label_tag }}
-            {{ form.email }}
-            {{ form.email.errors }}
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="container mx-auto px-4 py-10">
+        <div class="max-w-md mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Registro</h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="space-y-4">
+                        <div>
+                            {{ form.username.label_tag|safe|striptags }}
+                            <input type="text" name="{{ form.username.name }}" 
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   placeholder="Ingresa tu nombre de usuario"
+                                   required>
+                            {% if form.username.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.username.errors|striptags }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            {{ form.email.label_tag|safe|striptags }}
+                            <input type="email" name="{{ form.email.name }}"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   placeholder="Ingresa tu correo electrónico"
+                                   required>
+                            {% if form.email.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.email.errors|striptags }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            {{ form.password1.label_tag|safe|striptags }}
+                            <input type="password" name="{{ form.password1.name }}"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   placeholder="Ingresa tu contraseña"
+                                   required>
+                            {% if form.password1.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.password1.errors|striptags }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            {{ form.password2.label_tag|safe|striptags }}
+                            <input type="password" name="{{ form.password2.name }}"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   placeholder="Confirma tu contraseña"
+                                   required>
+                            {% if form.password2.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.password2.errors|striptags }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            {{ form.telefono.label_tag|safe|striptags }}
+                            <input type="tel" name="{{ form.telefono.name }}"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   placeholder="Ingresa tu número de teléfono"
+                                   required>
+                            {% if form.telefono.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.telefono.errors|striptags }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            {{ form.fecha_nacimiento.label_tag|safe|striptags }}
+                            <input type="date" name="{{ form.fecha_nacimiento.name }}"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                   required>
+                            {% if form.fecha_nacimiento.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.fecha_nacimiento.errors|striptags }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end mt-6">
+                        <button type="submit" 
+                                class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out flex items-center justify-center">
+                            <i data-lucide="user-plus" class="w-5 h-5 mr-2"></i>
+                            Registrarse
+                        </button>
+                    </div>
+                </form>
+
+                <p class="mt-4 text-center text-sm text-gray-600">
+                    ¿Ya tienes una cuenta?
+                    <a href="{% url 'iniciar_sesion' %}" class="text-green-500 hover:text-green-600 font-medium">
+                        Inicia sesión
+                    </a>
+                </p>
+            </div>
         </div>
-        <div class="form-group">
-            {{ form.password1.label_tag }}
-            {{ form.password1 }}
-            {{ form.password1.errors }}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center text-gray-500 text-sm">
+                © {% now "Y" %} Talent Tracker. Todos los derechos reservados.
+            </div>
         </div>
-        <div class="form-group">
-            {{ form.password2.label_tag }}
-            {{ form.password2 }}
-            {{ form.password2.errors }}
-        </div>
-        <div class="form-group">
-            {{ form.telefono.label_tag }}
-            {{ form.telefono }}
-            {{ form.telefono.errors }}
-        </div>
-        <div class="form-group">
-            {{ form.fecha_nacimiento.label_tag }}
-            {{ form.fecha_nacimiento }}
-            {{ form.fecha_nacimiento.errors }}
-        </div>
-        <button type="submit">Registrarse</button>
-    </form>
+    </footer>
+
+    <!-- Inicializar iconos de Lucide -->
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
