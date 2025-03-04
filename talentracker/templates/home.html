@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Inicio - Talent Tracker</title>
 </head>
 <body>
     <h1>Bienvenido a Talent Tracker</h1>
-    <p>Esta es la página de inicio.</p>
-    <a href="{% url 'registro' %}">Registrarse</a>
+
+    {% if user.is_authenticated %}
+        <!-- Mensaje de bienvenida si el usuario está autenticado -->
+        <p>Hola, {{ user.username }}. ¡Bienvenido de nuevo!</p>
+        <!-- Botones de Iniciar Sesión y Registrarse si el usuario no está autenticado -->
+        <p>Por favor, inicia sesión o regístrate para continuar.</p>
+        <a href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
+        <a href="{% url 'registro' %}">Registrarse</a>
+    {% endif %}
 </body>
 </html>

@@ -6,4 +6,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', talenTracker.home, name='home'),  # Ruta para la página de inicio
     path('registro/', talenTracker.registro, name='registro'),  # Ruta para el registro
+    path('iniciar-sesion/', talenTracker.iniciar_sesion, name='iniciar_sesion'),    # Ruta para iniciar sesión
 ]
