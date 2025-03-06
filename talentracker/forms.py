@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import FileExtensionValidator
 from .models import Usuario
 
 class RegistroForm(UserCreationForm):
@@ -11,6 +12,13 @@ class RegistroForm(UserCreationForm):
         label="Fecha de nacimiento",
         widget=forms.DateInput(attrs={'type': 'date'})  # Usar un input de tipo "date"
     )
+    curriculum = forms.FileField( # Instancia de Parseo de Archivos
+        required=False,
+        widget=forms.FileInput(),
+        validators=[
+            FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx']),
+        ] # mas opciones de cv
+    )
 
     class Meta:
         model = Usuario
@@ -21,6 +29,7 @@ class RegistroForm(UserCreationForm):
             'password2', # Confirmación de contraseña
             'telefono',  # Teléfono (opcional)
             'fecha_nacimiento',  # Fecha de nacimiento (opcional)
+            'curriculum',  # Archivo de currículum
         ]
         labels = {
             'username': 'Nombre de usuario',

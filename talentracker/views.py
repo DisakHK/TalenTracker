@@ -8,7 +8,7 @@ def home(request):
 
 def registro(request):
     if request.method == 'POST':
-        form = RegistroForm(request.POST)
+        form = RegistroForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)  # Inicia sesión automáticamente después del registro
