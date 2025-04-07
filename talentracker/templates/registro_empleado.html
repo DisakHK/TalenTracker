@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Empleado - Talent Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            500: '#10b981',
+                            600: '#059669'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <nav class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold">
+                    <span class="text-green-500">magneto</span>
+                    <span class="text-gray-700">Tracker</span>
+                </h1>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-10">
+        <div class="max-w-md mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Registro de Empleado</h2>
+                
+                <form method="post" enctype="multipart/form-data" class="space-y-6">
+                    {% csrf_token %}
+
+                    {{ form.non_field_errors }}
+                    
+                    {% for field in form.visible_fields %}
+                        <div>
+                            {{ field.label_tag|safe|striptags }}
+                            {{ field }}
+                            {% if field.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ field.errors|striptags }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="flex items-center justify-end mt-6">
+                        <button type="submit" 
+                                class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out flex items-center justify-center">
+                            <i data-lucide="user-plus" class="w-5 h-5 mr-2"></i>
+                            Registrarse
+                        </button>
+                    </div>
+                </form>
+
+                <p class="mt-4 text-center text-sm text-gray-600">
+                    ¿Ya tienes una cuenta?
+                    <a href="{% url 'iniciar_sesion' %}" class="text-green-500 hover:text-green-600 font-medium">
+                        Inicia sesión
+                    </a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center text-gray-500 text-sm">
+                © {% now "Y" %} Talent Tracker. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const fileInput = document.querySelector('input[type="file"]');
+        const fileNameElement = document.getElementById('file-name');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const fileName = e.target.files[0]?.name;
+                if (fileName) {
+                    fileNameElement.textContent = `Archivo seleccionado: ${fileName}`;
+                } else {
+                    fileNameElement.textContent = '';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

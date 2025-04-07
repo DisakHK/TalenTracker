@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Ofertas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white min-h-screen p-6">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Ofertas de trabajo</h1>
+
+        <p class="text-center text-gray-600">Aquí aparecerán las vacantes disponibles (¡en construcción!).</p>
+
+        <div class="text-center mt-6">
+            <a href="{% url 'home' %}" class="text-blue-600 hover:underline">← Volver al inicio</a>
+        </div>
+    </div>
+</body>
+</html>

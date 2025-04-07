@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrar preguntas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4 text-center">Administrar preguntas</h1>
+
+        <!-- Formulario para agregar pregunta -->
+        <div class="bg-white p-6 rounded shadow border mb-8">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <h4 class="font-semibold mb-2">Opciones:</h4>
+                {{ formset.management_form }}
+                {% for f in formset %}
+                    <div class="mb-2">{{ f.texto.label_tag }} {{ f.texto }}</div>
+                {% endfor %}
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Agregar</button>
+            </form>
+        </div>
+
+        <!-- Lista de preguntas existentes -->
+        <div class="bg-white p-6 rounded shadow border">
+            <h2 class="text-xl font-semibold mb-4">Preguntas existentes</h2>
+            {% for pregunta in preguntas %}
+                <div class="mb-4 p-4 border rounded bg-gray-100">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <strong>{{ pregunta.texto }}</strong>
+                            {% if pregunta.obligatoria %}<span class="text-red-600 text-sm ml-2">(Obligatoria)</span>{% endif %}
+                            <ul class="list-disc ml-6 mt-1 text-sm text-gray-700">
+                                {% for opcion in pregunta.opciones.all %}
+                                    <li>{{ opcion.texto }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <a href="{% url 'eliminar_pregunta' pregunta.id %}" class="text-red-600 hover:underline">Eliminar</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-gray-500">No hay preguntas registradas.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

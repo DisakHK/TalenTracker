@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Talent Tracker</title>
-    <!-- Incluir Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -21,7 +20,6 @@
             }
         }
     </script>
-    <!-- Incluir iconos de Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="min-h-screen bg-white">
@@ -36,17 +34,22 @@
             </div>
             <div class="flex items-center space-x-4">
                 {% if user.is_authenticated %}
-                    <button class="flex items-center text-gray-600 px-4 py-2 rounded hover:bg-gray-100">
-                        <i data-lucide="user" class="w-4 h-4 mr-2"></i>
-                        {{ user.username }}
-                    </button>
+                    <div class="flex items-center space-x-4">
+                        <button class="flex items-center text-gray-600 px-4 py-2 rounded hover:bg-gray-100">
+                            <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                            {{ user.username }}
+                        </button>
+                        <a href="{% url 'cerrar_sesion' %}" class="text-sm text-red-500 hover:underline">
+                            Cerrar sesión
+                        </a>
+                    </div>
                 {% else %}
                     <div class="flex space-x-2">
                         <a href="{% url 'iniciar_sesion' %}" class="border border-green-500 text-green-500 px-4 py-2 rounded hover:bg-green-50 flex items-center">
                             <i data-lucide="user" class="w-4 h-4 mr-2"></i>
                             Iniciar sesión
                         </a>
-                        <a href="{% url 'registro' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center">
+                        <a href="{% url 'elegir_tipo_usuario' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center">
                             <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i>
                             Registrarse
                         </a>
@@ -72,10 +75,41 @@
                     <div class="text-center">
                         <h3 class="text-xl font-semibold mb-2">Hola, {{ user.username }}</h3>
                         <p class="text-gray-600 mb-4">¡Bienvenido de nuevo a Talent Tracker!</p>
-                        <a href="#" class="inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md">
+                        <a href="#" class="inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md mb-6">
                             Ver mi perfil
                         </a>
+                        {% if user.is_superuser %}
+                        <a href="{% url 'admin_preguntas' %}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mb-4">
+                            Gestionar preguntas
+                        </a>
+                        {% endif %}
                     </div>
+                    {% if request.preguntas_perfil %}
+                        <form method="post" action="{% url 'guardar_respuestas' %}" class="space-y-4 text-left">
+                            {% csrf_token %}
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Completa tu perfil</h4>
+                            {% for pregunta in request.preguntas_perfil %}
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-1">{{ pregunta.texto }}</label>
+                                    <select name="pregunta_{{ pregunta.id }}"
+                                            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-green-200"
+                                            {% if pregunta.obligatoria %}required{% endif %}>
+                                        <option value="">Selecciona una opción</option>
+                                        {% for opcion in pregunta.opciones.all %}
+                                            <option value="{{ opcion.id }}">{{ opcion.texto }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                                Guardar respuestas
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="text-sm text-gray-500 hover:underline block mt-2">
+                                Omitir y ver ofertas de trabajo →
+                            </a>
+                        </form>
+                    {% endif %}
+
                 {% else %}
                     <div class="text-center">
                         <h3 class="text-xl font-semibold mb-2">Crea una cuenta o inicia sesión</h3>
@@ -87,7 +121,7 @@
                                 <i data-lucide="user" class="w-4 h-4 mr-2"></i>
                                 Iniciar sesión
                             </a>
-                            <a href="{% url 'registro' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center justify-center">
+                            <a href="{% url 'elegir_tipo_usuario' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center">
                                 <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i>
                                 Registrarse
                             </a>
@@ -107,7 +141,6 @@
         </div>
     </footer>
 
-    <!-- Inicializar iconos de Lucide -->
     <script>
         lucide.createIcons();
     </script>

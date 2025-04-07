@@ -1,8 +1,10 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import Usuario
+from .models import PreguntaPerfil, RespuestaPerfil, Usuario
 
-# Registra el modelo Usuario en el panel de administración
+# Este sí usa UserAdmin porque extiende de AbstractUser
+from django.contrib.auth.admin import UserAdmin
 admin.site.register(Usuario, UserAdmin)
 
-# Register your models here.
+# Estos dos usan el admin normal
+admin.site.register(PreguntaPerfil)
+admin.site.register(RespuestaPerfil)
