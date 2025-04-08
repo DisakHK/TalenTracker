@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Talent Tracker{% endblock %}</title>
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            500: '#10b981',
+                            600: '#059669'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen bg-white flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <h1 class="text-2xl font-bold">
+                <a href="{% url 'home' %}" class="text-green-500">magneto</span><span class="text-gray-700">Tracker</a>
+            </h1>
+
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <div class="flex items-center space-x-4">
+                        <button class="flex items-center text-gray-600 px-4 py-2 rounded hover:bg-gray-100">
+                            <i data-lucide="user" class="w-4 h-4 mr-2" aria-hidden="true"></i>
+                            {{ user.username }}
+                        </button>
+                        <a href="{% url 'cerrar_sesion' %}" class="text-sm text-red-500 hover:underline">
+                            Cerrar sesión
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="flex space-x-2">
+                        <a href="{% url 'iniciar_sesion' %}" class="border border-green-500 text-green-500 px-4 py-2 rounded hover:bg-green-50 flex items-center">
+                            <i data-lucide="user" class="w-4 h-4 mr-2" aria-hidden="true"></i>
+                            Iniciar sesión
+                        </a>
+                        <a href="{% url 'elegir_tipo_usuario' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center">
+                            <i data-lucide="user-plus" class="w-4 h-4 mr-2" aria-hidden="true"></i>
+                            Registrarse
+                        </a>
+                        
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+ 
+
+       
+          
+        
+    
+        {% block content %}
+        <!-- Contenido principal va aquí -->
+         
+        {% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-100 py-8 border-t border-gray-200 mt-10">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            © {% now "Y" %} Talent Tracker. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <!-- Lucide Init -->
+    <script>
+        lucide.createIcons();
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

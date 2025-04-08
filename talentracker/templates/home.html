@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -78,6 +79,14 @@
                         <a href="#" class="inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md mb-6">
                             Ver mi perfil
                         </a>
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-md">
+                        Mi espacio
+                    </a>
+                </div>
+                    
+    
+                </div>
                         {% if user.is_superuser %}
                         <a href="{% url 'admin_preguntas' %}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mb-4">
                             Gestionar preguntas

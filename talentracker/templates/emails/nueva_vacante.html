@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nueva vacante coincidente</title>
+</head>
+<body>
+    <h2>Hola {{ usuario.username }},</h2>
+    <p>Hemos encontrado una nueva vacante que coincide con tu perfil:</p>
+    
+    <h3>{{ oferta.titulo }}</h3>
+    <p><strong>Empresa:</strong> {{ oferta.empresa.perfilempresa.nombre_empresa }}</p>
+    <p>{{ oferta.descripcion|truncatewords:30 }}</p>
+    
+    <a href="{{ protocol }}://{{ domain }}{% url 'postular' oferta.id %}">
+        Ver vacante completa y postular
+    </a>
+    
+    <p>Saludos,<br>El equipo de TalentTracker</p>
+    
+    <p><small>
+        Si no deseas recibir este tipo de notificaciones, puedes 
+        <a href="{{ protocol }}://{{ domain }}{% url 'configurar_notificaciones' %}">
+            cambiar tu configuración
+        </a>.
+    </small></p>
+</body>
+</html>

@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import Usuario, OfertaTrabajo, Postulacion
+from django.contrib import messages
 
 from .forms import (
     RegistroEmpleadoForm, RegistroEmpresaForm,
@@ -9,8 +11,10 @@ from .forms import (
 )
 from .models import (
     Usuario, PreguntaPerfil, RespuestaPerfil, OpcionPregunta,
-    OfertaTrabajo, Postulacion
+    OfertaTrabajo, Postulacion,
+    ConfiguracionNotificaciones, Notificacion
 )
+from .forms import ConfiguracionNotificacionesForm
 
 # Home
 def home(request):
@@ -20,7 +24,6 @@ def home(request):
 def elegir_tipo_usuario(request):
     return render(request, 'elegir_tipo.html')
 
-# Dashboard según tipo de usuario
 @login_required
 def dashboard(request):
     if request.user.tipo_usuario == 'empresa':
@@ -28,11 +31,18 @@ def dashboard(request):
 
     ofertas = OfertaTrabajo.objects.all().order_by('-fecha_creacion')
     postuladas = Postulacion.objects.filter(usuario=request.user).values_list('oferta_id', flat=True)
+    
+    # Aquí agregamos las notificaciones del usuario
+    notificaciones = Notificacion.objects.filter(usuario=request.user).order_by('-fecha_creacion')
+    leida = notificaciones.filter(leida=False).count()
+ 
     return render(request, 'dashboard_empleado.html', {
         'ofertas': ofertas,
-        'postuladas': postuladas
+        'postuladas': postuladas,
+        'notificaciones': notificaciones,
+        'leida': leida
     })
-
+    
 # Dashboard empresa
 @login_required
 def dashboard_empresa(request):
@@ -42,7 +52,6 @@ def dashboard_empresa(request):
     ofertas = OfertaTrabajo.objects.filter(empresa=request.user).prefetch_related('postulaciones__usuario')
     return render(request, 'dashboard_empresa.html', {'ofertas': ofertas})
 
-# Crear nueva oferta
 @login_required
 def crear_oferta(request):
     if request.user.tipo_usuario != 'empresa':
@@ -54,11 +63,21 @@ def crear_oferta(request):
             oferta = form.save(commit=False)
             oferta.empresa = request.user
             oferta.save()
+            
+            # El signal se encargará de las notificaciones
+            messages.success(request, 'Oferta creada exitosamente. Los empleados serán notificados.')
             return redirect('dashboard_empresa')
     else:
         form = OfertaTrabajoForm()
+    
     return render(request, 'crear_oferta.html', {'form': form})
-
+       
+@login_required
+def eliminar_oferta(request, oferta_id):
+    oferta = get_object_or_404(OfertaTrabajo, id=oferta_id)
+    oferta.delete()
+    return redirect('dashboard_empresa')
+    
 # Postularse a una oferta
 @login_required
 def postular(request, oferta_id):
@@ -67,7 +86,13 @@ def postular(request, oferta_id):
 
     oferta = get_object_or_404(OfertaTrabajo, id=oferta_id)
     Postulacion.objects.get_or_create(usuario=request.user, oferta=oferta)
+    
+     # Borrar notificaciones del usuario
+    Notificacion.objects.filter(usuario=request.user).delete()
+    
     return redirect('dashboard')
+
+
 
 # Registro empleado
 def registro_empleado(request):
@@ -180,3 +205,39 @@ def guardar_respuestas(request):
 @login_required
 def ver_ofertas_empresa(request):
     return dashboard_empresa(request)  # se puede eliminar si no se usa por separado
+
+# Configuración de notificaciones
+@login_required
+def configurar_notificaciones(request):
+    try:
+        config = ConfiguracionNotificaciones.objects.get(usuario=request.user)
+    except ConfiguracionNotificaciones.DoesNotExist:
+        config = ConfiguracionNotificaciones.objects.create(usuario=request.user)
+
+    if request.method == 'POST':
+        form = ConfiguracionNotificacionesForm(request.POST, instance=config)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = ConfiguracionNotificacionesForm(instance=config)
+
+    return render(request, 'configurar_notificaciones.html', {'form': form})
+
+# Ver notificaciones
+@login_required
+def ver_notificaciones(request):
+    notificaciones = Notificacion.objects.filter(usuario=request.user).order_by('-fecha_creacion')
+    return render(request, 'notificaciones.html', {'notificaciones': notificaciones})
+
+@login_required
+def marcar_leida(request, notificacion_id):
+    notificacion = get_object_or_404(Notificacion, id=notificacion_id, usuario=request.user)
+    notificacion.leida = True
+    notificacion.save()
+    return redirect(request.META.get('HTTP_REFERER', 'dashboard'))
+
+def obtener_preferencias_usuario(usuario):
+    respuestas = RespuestaPerfil.objects.filter(usuario=usuario).select_related('pregunta', 'opcion')
+    preferencias = {r.pregunta.texto: r.opcion.texto for r in respuestas}
+    return preferencias

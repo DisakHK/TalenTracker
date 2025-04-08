@@ -1,0 +1,15 @@
+Hola {{ usuario.username }},
+
+Hemos encontrado una nueva vacante que coincide con tu perfil:
+
+{{ oferta.titulo }}
+Empresa: {{ oferta.empresa.perfilempresa.nombre_empresa }}
+{{ oferta.descripcion|truncatewords:30 }}
+
+Ver vacante completa y postular: {{ protocol }}://{{ domain }}{% url 'postular' oferta.id %}
+
+Saludos,
+El equipo de TalentTracker
+
+Si no deseas recibir este tipo de notificaciones, puedes cambiar tu configuración: 
+{{ protocol }}://{{ domain }}{% url 'configurar_notificaciones' %}

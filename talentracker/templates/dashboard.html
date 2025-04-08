@@ -16,5 +16,22 @@
             <a href="{% url 'home' %}" class="text-blue-600 hover:underline">← Volver al inicio</a>
         </div>
     </div>
+    {% if user.is_authenticated %}
+<div class="notifications">
+    {% for notification in user.notificaciones.filter(leida=False)|slice:":5" %}
+    <div class="alert alert-info">
+        {{ notification.mensaje }}
+        <a href="{% url 'marcar_leida' notification.id %}" class="close">&times;</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% if user.is_authenticated %}
+<div class="text-right mb-4">
+    <a href="{% url 'ver_notificaciones' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+        Ver Notificaciones
+    </a>
+</div>
+{% endif %}
 </body>
 </html>

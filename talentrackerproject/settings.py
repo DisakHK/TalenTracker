@@ -128,3 +128,21 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configuración de email para pruebas (usa console backend)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# O para producción con Gmail:
+"""
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'jeanlondo12@gmail.com'  # Cambiar por tu email real
+EMAIL_HOST_PASSWORD = 'tupassword'  # Cambiar por tu contraseña o app password
+DEFAULT_FROM_EMAIL = 'jeanlondo12@gmail.com'  # Igual que EMAIL_HOST_USER
+"""
+
+# Contexto para emails
+PROTOCOL = 'http' if DEBUG else 'https'
+DOMAIN = 'localhost:8000' if DEBUG else 'tudominio.com'

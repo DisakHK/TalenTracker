@@ -1,6 +1,32 @@
+{% extends 'base.html' %}
+
 {% block content %}
+
 <div class="max-w-4xl mx-auto bg-white shadow rounded p-6 mt-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Ofertas de trabajo disponibles</h2>
+
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Ofertas de trabajo disponibles</h2>
+
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+            <p class="font-bold flex items-center">
+    Tus Notificaciones
+    {% if notificaciones %}
+        <span class="ml-2 inline-block bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+            {{ notificaciones|length }}
+        </span>
+    {% endif %}
+</p>
+            {% if notificaciones %}
+                <ul class="mt-2 list-disc list-inside">
+                    {% for n in notificaciones %}
+                        <li>{{ n.mensaje }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="mt-2 text-sm">No tienes notificaciones</p>
+            {% endif %}
+        </div>
+    </div>
 
     {% for oferta in ofertas %}
         <div class="border-b border-gray-200 py-4">
@@ -15,8 +41,10 @@
                 </a>
             {% endif %}
         </div>
+    
     {% empty %}
         <p class="text-gray-500">No hay ofertas disponibles por ahora.</p>
     {% endfor %}
 </div>
 {% endblock %}
+y 

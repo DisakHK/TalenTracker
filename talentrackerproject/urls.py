@@ -9,8 +9,8 @@ urlpatterns = [
     path('', talenTracker.home, name='home'),
 
     # Autenticación
-    path('iniciar-sesion/', talenTracker.iniciar_sesion, name='iniciar_sesion'),
-    path('cerrar-sesion/', talenTracker.cerrar_sesion, name='cerrar_sesion'),
+    path('iniciar_sesion/', talenTracker.iniciar_sesion, name='iniciar_sesion'),
+    path('cerrar_sesion/', talenTracker.cerrar_sesion, name='cerrar_sesion'),
 
     # Registro por tipo de usuario
     path('elige-tipo/', talenTracker.elegir_tipo_usuario, name='elegir_tipo_usuario'),
@@ -24,12 +24,19 @@ urlpatterns = [
     # Ofertas de trabajo
     path('empresa/crear-oferta/', talenTracker.crear_oferta, name='crear_oferta'),
     path('postular/<int:oferta_id>/', talenTracker.postular, name='postular'),
+    path('oferta/<int:oferta_id>/eliminar/',talenTracker.eliminar_oferta, name='eliminar_oferta'),
+
 
     # Preguntas de perfil (admin)
     path('guardar-respuestas/', talenTracker.guardar_respuestas, name='guardar_respuestas'),
     path('admin-preguntas/', talenTracker.admin_preguntas, name='admin_preguntas'),
     path('eliminar-pregunta/<int:pregunta_id>/', talenTracker.eliminar_pregunta, name='eliminar_pregunta'),
+    
+    # Notificaciones
+    path('configurar-notificaciones/', talenTracker.configurar_notificaciones, name='configurar_notificaciones'),
+    path('notificaciones/', talenTracker.ver_notificaciones, name='ver_notificaciones'),
+    path('notificaciones/marcar-leida/<int:notificacion_id>/', talenTracker.marcar_leida, name='marcar_leida'),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

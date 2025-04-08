@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import FileExtensionValidator
 from django.forms import inlineformset_factory
 from .models import Usuario, PreguntaPerfil, OpcionPregunta, PerfilEmpresa
-from .models import OfertaTrabajo
+from .models import OfertaTrabajo, ConfiguracionNotificaciones
 
 # --- Formulario de registro para EMPLEADOS (tu versión original sin el campo "tipo_usuario") ---
 class RegistroEmpleadoForm(UserCreationForm):
@@ -71,7 +71,7 @@ OpcionFormSet = inlineformset_factory(
     PreguntaPerfil,
     OpcionPregunta,
     fields=('texto',),
-    extra=3,
+    extra=10,
     can_delete=False
 )
 
@@ -83,3 +83,13 @@ class OfertaTrabajoForm(forms.ModelForm):
             'titulo': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded'}),
             'descripcion': forms.Textarea(attrs={'class': 'w-full px-3 py-2 border rounded'}),
         }
+ 
+class ConfiguracionNotificacionesForm(forms.ModelForm):
+    class Meta:
+        model = ConfiguracionNotificaciones
+        fields = ['recibir_notificaciones', 'notificar_por_email', 'notificar_en_plataforma']
+        labels = {
+            'recibir_notificaciones': 'Recibir notificaciones',
+            'notificar_por_email': 'Recibir notificaciones por email',
+            'notificar_en_plataforma': 'Mostrar notificaciones en la plataforma',
+        }       

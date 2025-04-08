@@ -64,3 +64,34 @@ class Postulacion(models.Model):
 
     def __str__(self):
         return f"{self.usuario.username} → {self.oferta.titulo}"
+    
+# En models.py, agregar al final:
+
+class ConfiguracionNotificaciones(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='config_notificaciones')
+    recibir_notificaciones = models.BooleanField(default=True)
+    notificar_por_email = models.BooleanField(default=True)
+    notificar_en_plataforma = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Configuración de {self.usuario.username}"
+
+# configurar el envío de notificaciones 
+class Notificacion(models.Model):
+    TIPO_CHOICES = [
+        ('vacante', 'Nueva vacante coincidente'),
+        ('postulacion', 'Actualización de postulación'),
+    ]
+    
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='notificaciones')
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    mensaje = models.TextField()
+    oferta = models.ForeignKey(OfertaTrabajo, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    leida = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-fecha_creacion']
+    
+    def __str__(self):
+        return f"{self.usuario.username} - {self.get_tipo_display()}"
