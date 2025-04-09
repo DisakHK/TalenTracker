@@ -1,37 +1,100 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<div class="max-w-4xl mx-auto bg-white shadow rounded p-6 mt-8">
-
+<div class="max-w-6xl mx-auto bg-white shadow rounded p-6 mt-8">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Ofertas de trabajo disponibles</h2>
-
-        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
-            <p class="font-bold flex items-center">
-    Tus Notificaciones
-    {% if notificaciones %}
-        <span class="ml-2 inline-block bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-            {{ notificaciones|length }}
-        </span>
-    {% endif %}
-</p>
-            {% if notificaciones %}
-                <ul class="mt-2 list-disc list-inside">
-                    {% for n in notificaciones %}
-                        <li>{{ n.mensaje }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="mt-2 text-sm">No tienes notificaciones</p>
-            {% endif %}
-        </div>
     </div>
 
+    <!-- Filtros de búsqueda -->
+    <form method="get" class="mb-6 bg-gray-50 p-4 rounded border border-gray-200">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Industria</label>
+                <select name="industria" class="w-full border rounded p-2">
+                    <option value="">Todas</option>
+                    <option value="tecnologia" {% if industria == 'tecnologia' %}selected{% endif %}>Tecnología</option>
+                    <option value="salud" {% if industria == 'salud' %}selected{% endif %}>Salud</option>
+                    <option value="finanzas" {% if industria == 'finanzas' %}selected{% endif %}>Finanzas</option>
+                    <option value="educacion" {% if industria == 'educacion' %}selected{% endif %}>Educación</option>
+                    <option value="servicios" {% if industria == 'servicios' %}selected{% endif %}>Servicios</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Ubicación</label>
+                <input type="text" name="ubicacion" value="{{ ubicacion|default:'' }}"
+                       placeholder="Ciudad o país" class="w-full border rounded p-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nivel de experiencia</label>
+                <select name="nivel_experiencia" class="w-full border rounded p-2">
+                    <option value="">Todos</option>
+                    <option value="junior" {% if nivel_experiencia == 'junior' %}selected{% endif %}>Junior</option>
+                    <option value="intermedio" {% if nivel_experiencia == 'intermedio' %}selected{% endif %}>Intermedio</option>
+                    <option value="senior" {% if nivel_experiencia == 'senior' %}selected{% endif %}>Senior</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Trabajo remoto</label>
+                <select name="remoto" class="w-full border rounded p-2">
+                    <option value="">Todos</option>
+                    <option value="si" {% if remoto == 'si' %}selected{% endif %}>Sí</option>
+                    <option value="no" {% if remoto == 'no' %}selected{% endif %}>No</option>
+                    <option value="mixto" {% if remoto == 'mixto' %}selected{% endif %}>Mixto</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nivel académico</label>
+                <select name="nivel_academico" class="w-full border rounded p-2">
+                    <option value="">Todos</option>
+                    <option value="ninguno" {% if nivel_academico == 'ninguno' %}selected{% endif %}>Ninguno</option>
+                    <option value="secundaria" {% if nivel_academico == 'secundaria' %}selected{% endif %}>Secundaria</option>
+                    <option value="tecnico" {% if nivel_academico == 'tecnico' %}selected{% endif %}>Técnico</option>
+                    <option value="universitario" {% if nivel_academico == 'universitario' %}selected{% endif %}>Universitario</option>
+                    <option value="posgrado" {% if nivel_academico == 'posgrado' %}selected{% endif %}>Posgrado</option>
+                </select>
+            </div>
+        </div>
+        <div class="text-right mt-4">
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                Aplicar filtros
+            </button>
+        </div>
+    </form>
+
+    <!-- Notificaciones -->
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+        <p class="font-bold flex items-center">
+            Tus Notificaciones
+            {% if notificaciones %}
+                <span class="ml-2 inline-block bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                    {{ notificaciones|length }}
+                </span>
+            {% endif %}
+        </p>
+        {% if notificaciones %}
+            <ul class="mt-2 list-disc list-inside">
+                {% for n in notificaciones %}
+                    <li>{{ n.mensaje }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="mt-2 text-sm">No tienes notificaciones</p>
+        {% endif %}
+    </div>
+
+    <!-- Ofertas -->
     {% for oferta in ofertas %}
         <div class="border-b border-gray-200 py-4">
             <h3 class="text-lg font-semibold text-gray-900">{{ oferta.titulo }}</h3>
-            <p class="text-gray-600 mt-1 mb-3">{{ oferta.descripcion }}</p>
+            <p class="text-gray-600 mt-1 mb-2">{{ oferta.descripcion }}</p>
+            <p class="text-sm text-gray-500 mb-1">
+                <strong>Industria:</strong> {{ oferta.industria|capfirst }} | 
+                <strong>Ubicación:</strong> {{ oferta.ubicacion }} | 
+                <strong>Experiencia:</strong> {{ oferta.nivel_experiencia|capfirst }} | 
+                <strong>Remoto:</strong> {{ oferta.remoto|capfirst }} | 
+                <strong>Académico:</strong> {{ oferta.nivel_academico|capfirst }}
+            </p>
             {% if oferta.id in postuladas %}
                 <span class="text-green-600 font-semibold">Ya postulaste</span>
             {% else %}
@@ -41,10 +104,8 @@
                 </a>
             {% endif %}
         </div>
-    
     {% empty %}
-        <p class="text-gray-500">No hay ofertas disponibles por ahora.</p>
+        <p class="text-gray-500 mt-4">No hay ofertas que coincidan con los filtros aplicados.</p>
     {% endfor %}
 </div>
 {% endblock %}
-y 

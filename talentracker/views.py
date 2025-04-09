@@ -1,20 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Usuario, OfertaTrabajo, Postulacion
 from django.contrib import messages
-
-from .forms import (
-    RegistroEmpleadoForm, RegistroEmpresaForm,
-    PerfilEmpresaForm, PreguntaPerfilForm, OpcionFormSet,
-    OfertaTrabajoForm
-)
 from .models import (
     Usuario, PreguntaPerfil, RespuestaPerfil, OpcionPregunta,
-    OfertaTrabajo, Postulacion,
-    ConfiguracionNotificaciones, Notificacion
+    OfertaTrabajo, Postulacion, ConfiguracionNotificaciones, Notificacion
 )
-from .forms import ConfiguracionNotificacionesForm
+from .forms import (
+    RegistroEmpleadoForm, RegistroEmpresaForm, PerfilEmpresaForm,
+    PreguntaPerfilForm, OpcionFormSet, OfertaTrabajoForm,
+    ConfiguracionNotificacionesForm
+)
 
 # Home
 def home(request):
@@ -27,22 +23,44 @@ def elegir_tipo_usuario(request):
 @login_required
 def dashboard(request):
     if request.user.tipo_usuario == 'empresa':
-        return redirect('dashboard_empresa')
+        return redirect('dashboard_empresa')  # Evita mostrar dashboard de empleados a empresas
 
     ofertas = OfertaTrabajo.objects.all().order_by('-fecha_creacion')
+
+    # Filtros
+    industria = request.GET.get('industria')
+    ubicacion = request.GET.get('ubicacion')
+    experiencia = request.GET.get('nivel_experiencia')
+    remoto = request.GET.get('remoto')
+    nivel_academico = request.GET.get('nivel_academico')
+
+    if industria:
+        ofertas = ofertas.filter(industria=industria)
+    if ubicacion:
+        ofertas = ofertas.filter(ubicacion__icontains=ubicacion)
+    if experiencia:
+        ofertas = ofertas.filter(nivel_experiencia=experiencia)
+    if remoto:
+        ofertas = ofertas.filter(remoto=remoto)
+    if nivel_academico:
+        ofertas = ofertas.filter(nivel_academico=nivel_academico)
+
     postuladas = Postulacion.objects.filter(usuario=request.user).values_list('oferta_id', flat=True)
-    
-    # Aquí agregamos las notificaciones del usuario
-    notificaciones = Notificacion.objects.filter(usuario=request.user).order_by('-fecha_creacion')
-    leida = notificaciones.filter(leida=False).count()
- 
-    return render(request, 'dashboard_empleado.html', {
+    notificaciones = Notificacion.objects.filter(usuario=request.user)
+
+    context = {
         'ofertas': ofertas,
+        'industria': industria,
+        'ubicacion': ubicacion,
+        'nivel_experiencia': experiencia,
+        'remoto': remoto,
+        'nivel_academico': nivel_academico,
         'postuladas': postuladas,
         'notificaciones': notificaciones,
-        'leida': leida
-    })
-    
+    }
+
+    return render(request, 'dashboard_empleado.html', context)
+
 # Dashboard empresa
 @login_required
 def dashboard_empresa(request):
@@ -63,21 +81,20 @@ def crear_oferta(request):
             oferta = form.save(commit=False)
             oferta.empresa = request.user
             oferta.save()
-            
-            # El signal se encargará de las notificaciones
+
             messages.success(request, 'Oferta creada exitosamente. Los empleados serán notificados.')
             return redirect('dashboard_empresa')
     else:
         form = OfertaTrabajoForm()
-    
+
     return render(request, 'crear_oferta.html', {'form': form})
-       
+
 @login_required
 def eliminar_oferta(request, oferta_id):
     oferta = get_object_or_404(OfertaTrabajo, id=oferta_id)
     oferta.delete()
     return redirect('dashboard_empresa')
-    
+
 # Postularse a una oferta
 @login_required
 def postular(request, oferta_id):
@@ -86,13 +103,9 @@ def postular(request, oferta_id):
 
     oferta = get_object_or_404(OfertaTrabajo, id=oferta_id)
     Postulacion.objects.get_or_create(usuario=request.user, oferta=oferta)
-    
-     # Borrar notificaciones del usuario
     Notificacion.objects.filter(usuario=request.user).delete()
-    
+
     return redirect('dashboard')
-
-
 
 # Registro empleado
 def registro_empleado(request):
@@ -138,11 +151,22 @@ def iniciar_sesion(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
-            return redirect('home')
-        return render(request, 'talentracker/iniciar_sesion.html', {'error': 'Usuario o contraseña incorrectos'})
+
+            # ✅ Redirección condicional según el tipo de usuario
+            if user.tipo_usuario == 'empresa':
+                return redirect('dashboard_empresa')
+            else:
+                return redirect('dashboard')  # solo empleados van al dashboard con preguntas
+
+        return render(request, 'talentracker/iniciar_sesion.html', {
+            'error': 'Usuario o contraseña incorrectos'
+        })
+
     return render(request, 'iniciar_sesion.html')
+
 
 # Cerrar sesión
 def cerrar_sesion(request):
@@ -201,10 +225,10 @@ def guardar_respuestas(request):
         return redirect('home')
     return redirect('home')
 
-# Vista extra para empresa si no querés usar dashboard_empresa directamente
+# Vista extra para empresa
 @login_required
 def ver_ofertas_empresa(request):
-    return dashboard_empresa(request)  # se puede eliminar si no se usa por separado
+    return dashboard_empresa(request)
 
 # Configuración de notificaciones
 @login_required

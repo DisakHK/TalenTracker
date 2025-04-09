@@ -76,13 +76,41 @@ OpcionFormSet = inlineformset_factory(
 )
 
 class OfertaTrabajoForm(forms.ModelForm):
+    HABILIDADES_CHOICES = [
+        ('Python', 'Python'),
+        ('SQL', 'SQL'),
+        ('Comunicación', 'Comunicación'),
+        ('Liderazgo', 'Liderazgo'),
+        ('Ventas', 'Ventas'),
+        ('Creatividad', 'Creatividad'),
+    ]
+
+    habilidades = forms.MultipleChoiceField(
+        choices=HABILIDADES_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        label="Habilidades requeridas"
+    )
+
     class Meta:
         model = OfertaTrabajo
-        fields = ['titulo', 'descripcion']
+        fields = [
+            'titulo', 'descripcion', 'industria', 'ubicacion', 'nivel_experiencia',
+            'salario_estimado', 'remoto', 'nivel_academico', 'habilidades'
+        ]
         widgets = {
-            'titulo': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded'}),
-            'descripcion': forms.Textarea(attrs={'class': 'w-full px-3 py-2 border rounded'}),
+            'titulo': forms.TextInput(attrs={'class': 'w-full border border-gray-300 rounded p-2'}),
+            'descripcion': forms.Textarea(attrs={'class': 'w-full border border-gray-300 rounded p-2'}),
+            'industria': forms.Select(attrs={'class': 'w-full border border-gray-300 rounded p-2'}),
+            'ubicacion': forms.TextInput(attrs={'class': 'w-full border border-gray-300 rounded p-2'}),
+            'nivel_experiencia': forms.Select(attrs={'class': 'w-full border border-gray-300 rounded p-2'}),
+            'salario_estimado': forms.NumberInput(attrs={'class': 'w-full border border-gray-300 rounded p-2', 'step': '0.01'}),
+            'remoto': forms.Select(attrs={'class': 'w-full border border-gray-300 rounded p-2'}),
+            'nivel_academico': forms.Select(attrs={'class': 'w-full border border-gray-300 rounded p-2'}),
         }
+
+    def clean_habilidades(self):
+        return self.cleaned_data['habilidades']  # Ya es una lista, no hay que hacer nada
+
  
 class ConfiguracionNotificacionesForm(forms.ModelForm):
     class Meta:

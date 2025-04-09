@@ -49,9 +49,37 @@ class RespuestaPerfil(models.Model):
         return f"{self.usuario.username} - {self.pregunta.texto} - {self.opcion.texto if self.opcion else 'Sin respuesta'}"
 
 class OfertaTrabajo(models.Model):
+    INDUSTRIAS = [
+        ('tecnologia', 'Tecnología'),
+        ('salud', 'Salud'),
+        ('finanzas', 'Finanzas'),
+        ('educacion', 'Educación'),
+        ('servicios', 'Servicios'),
+        ('otros', 'Otros'),
+    ]
+
+    EXPERIENCIA = [
+        ('junior', 'Junior'),
+        ('intermedio', 'Intermedio'),
+        ('senior', 'Senior'),
+    ]
+
     empresa = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=255)
     descripcion = models.TextField()
+    industria = models.CharField(max_length=50, choices=INDUSTRIAS, default='otros')
+    ubicacion = models.CharField(max_length=100, default='No especificada')
+    nivel_experiencia = models.CharField(max_length=20, choices=EXPERIENCIA, default='junior')
+    salario_estimado = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    remoto = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No'), ('mixto', 'Mixto')], default='no')
+    nivel_academico = models.CharField(max_length=20, choices=[
+        ('ninguno', 'Ninguno'),
+        ('secundaria', 'Secundaria'),
+        ('tecnico', 'Técnico'),
+        ('universitario', 'Universitario'),
+        ('posgrado', 'Posgrado')
+    ], default='ninguno')
+    habilidades = models.JSONField(default=list)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
