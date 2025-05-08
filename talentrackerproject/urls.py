@@ -20,11 +20,13 @@ urlpatterns = [
     # Dashboards
     path('dashboard/', talenTracker.dashboard, name='dashboard'),
     path('empresa/dashboard/', talenTracker.dashboard_empresa, name='dashboard_empresa'),
+     path('ofertas/', talenTracker.dashboard, name='ofertas'),
 
     # Ofertas de trabajo
     path('empresa/crear-oferta/', talenTracker.crear_oferta, name='crear_oferta'),
     path('postular/<int:oferta_id>/', talenTracker.postular, name='postular'),
     path('oferta/<int:oferta_id>/eliminar/',talenTracker.eliminar_oferta, name='eliminar_oferta'),
+   
 
 
     # Preguntas de perfil (admin)
@@ -36,6 +38,10 @@ urlpatterns = [
     path('configurar-notificaciones/', talenTracker.configurar_notificaciones, name='configurar_notificaciones'),
     path('notificaciones/', talenTracker.ver_notificaciones, name='ver_notificaciones'),
     path('notificaciones/marcar-leida/<int:notificacion_id>/', talenTracker.marcar_leida, name='marcar_leida'),
+    
+    # Like y favoritos
+    path('toggle-like/<int:oferta_id>/', talenTracker.toggle_like, name='toggle_like'),
+    path('favoritos/', talenTracker.favoritos, name='favoritos'),
 ]
 
 if settings.DEBUG:

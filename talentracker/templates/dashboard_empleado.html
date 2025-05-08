@@ -11,7 +11,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700">Industria</label>
-                <select name="industria" class="w-full border rounded p-2">
+                <select name="industria" class="w-full border rounded p-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Todas</option>
                     <option value="tecnologia" {% if industria == 'tecnologia' %}selected{% endif %}>Tecnología</option>
                     <option value="salud" {% if industria == 'salud' %}selected{% endif %}>Salud</option>
@@ -22,12 +22,12 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700">Ubicación</label>
-                <input type="text" name="ubicacion" value="{{ ubicacion|default:'' }}"
-                       placeholder="Ciudad o país" class="w-full border rounded p-2">
+                <input type="text" name="ubicacion" value="{{ ubicacion|default:'' }}" placeholder="Ciudad o país"
+                    class="w-full border rounded p-2 focus:ring-green-500 focus:border-green-500">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700">Nivel de experiencia</label>
-                <select name="nivel_experiencia" class="w-full border rounded p-2">
+                <select name="nivel_experiencia" class="w-full border rounded p-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Todos</option>
                     <option value="junior" {% if nivel_experiencia == 'junior' %}selected{% endif %}>Junior</option>
                     <option value="intermedio" {% if nivel_experiencia == 'intermedio' %}selected{% endif %}>Intermedio</option>
@@ -36,7 +36,7 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700">Trabajo remoto</label>
-                <select name="remoto" class="w-full border rounded p-2">
+                <select name="remoto" class="w-full border rounded p-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Todos</option>
                     <option value="si" {% if remoto == 'si' %}selected{% endif %}>Sí</option>
                     <option value="no" {% if remoto == 'no' %}selected{% endif %}>No</option>
@@ -45,7 +45,7 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700">Nivel académico</label>
-                <select name="nivel_academico" class="w-full border rounded p-2">
+                <select name="nivel_academico" class="w-full border rounded p-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Todos</option>
                     <option value="ninguno" {% if nivel_academico == 'ninguno' %}selected{% endif %}>Ninguno</option>
                     <option value="secundaria" {% if nivel_academico == 'secundaria' %}selected{% endif %}>Secundaria</option>
@@ -56,7 +56,8 @@
             </div>
         </div>
         <div class="text-right mt-4">
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded flex items-center justify-center ml-auto">
+                <i data-lucide="filter" class="h-4 w-4 mr-2"></i>
                 Aplicar filtros
             </button>
         </div>
@@ -65,47 +66,179 @@
     <!-- Notificaciones -->
     <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
         <p class="font-bold flex items-center">
+            <i data-lucide="bell" class="h-5 w-5 mr-2"></i>
             Tus Notificaciones
             {% if notificaciones %}
-                <span class="ml-2 inline-block bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-                    {{ notificaciones|length }}
-                </span>
+            <span class="ml-2 inline-block bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                {{ notificaciones|length }}
+            </span>
             {% endif %}
         </p>
         {% if notificaciones %}
-            <ul class="mt-2 list-disc list-inside">
-                {% for n in notificaciones %}
-                    <li>{{ n.mensaje }}</li>
-                {% endfor %}
-            </ul>
+        <ul class="mt-2 list-disc list-inside">
+            {% for n in notificaciones %}
+            <li>{{ n.mensaje }}</li>
+            {% endfor %}
+        </ul>
         {% else %}
-            <p class="mt-2 text-sm">No tienes notificaciones</p>
+        <p class="mt-2 text-sm">No tienes notificaciones</p>
         {% endif %}
     </div>
 
-    <!-- Ofertas -->
-    {% for oferta in ofertas %}
-        <div class="border-b border-gray-200 py-4">
-            <h3 class="text-lg font-semibold text-gray-900">{{ oferta.titulo }}</h3>
-            <p class="text-gray-600 mt-1 mb-2">{{ oferta.descripcion }}</p>
-            <p class="text-sm text-gray-500 mb-1">
-                <strong>Industria:</strong> {{ oferta.industria|capfirst }} | 
-                <strong>Ubicación:</strong> {{ oferta.ubicacion }} | 
-                <strong>Experiencia:</strong> {{ oferta.nivel_experiencia|capfirst }} | 
-                <strong>Remoto:</strong> {{ oferta.remoto|capfirst }} | 
-                <strong>Académico:</strong> {{ oferta.nivel_academico|capfirst }}
-            </p>
-            {% if oferta.id in postuladas %}
-                <span class="text-green-600 font-semibold">Ya postulaste</span>
-            {% else %}
-                <a href="{% url 'postular' oferta.id %}" 
-                   class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm">
-                    Postularme
-                </a>
-            {% endif %}
-        </div>
-    {% empty %}
-        <p class="text-gray-500 mt-4">No hay ofertas que coincidan con los filtros aplicados.</p>
-    {% endfor %}
+   <!-- Ofertas -->
+   {% for oferta in ofertas %}
+   <div class="border-b border-gray-200 py-4 hover:bg-gray-50 transition-colors duration-150 rounded-md px-4">
+       <div class="flex justify-between items-start">
+           <div class="flex-1">
+               <h3 class="text-lg font-semibold text-gray-900">{{ oferta.titulo }}</h3>
+               <p class="text-gray-600 mt-1 mb-2">{{ oferta.descripcion }}</p>
+               <div class="flex flex-wrap gap-2 text-sm text-gray-500 mb-3">
+                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                       <i data-lucide="briefcase" class="h-3.5 w-3.5 mr-1"></i>
+                       {{ oferta.industria|capfirst }}
+                   </span>
+                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                       <i data-lucide="map-pin" class="h-3.5 w-3.5 mr-1"></i>
+                       {{ oferta.ubicacion }}
+                   </span>
+                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                       <i data-lucide="award" class="h-3.5 w-3.5 mr-1"></i>
+                       {{ oferta.nivel_experiencia|capfirst }}
+                   </span>
+                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                       <i data-lucide="{% if oferta.remoto == 'si' %}wifi{% elif oferta.remoto == 'mixto' %}git-branch{% else %}building{% endif %}" class="h-3.5 w-3.5 mr-1"></i>
+                       {{ oferta.remoto|capfirst }}
+                   </span>
+                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                       <i data-lucide="graduation-cap" class="h-3.5 w-3.5 mr-1"></i>
+                       {{ oferta.nivel_academico|capfirst }}
+                   </span>
+               </div>
+           </div>
+           <button class="like-btn flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition-colors duration-150 group" data-oferta-id="{{ oferta.id }}" aria-label="{% if oferta.id in likes %}Quitar de favoritos{% else %}Añadir a favoritos{% endif %}">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="{% if oferta.id in likes %}#10b981{% else %}none{% endif %}" stroke="{% if oferta.id in likes %}#10b981{% else %}#9ca3af{% endif %}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon transition-all duration-300 transform group-hover:scale-110">
+                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+               </svg>
+           </button>
+       </div>
+
+       <div class="mt-3">
+           {% if oferta.id in postuladas %}
+           <span class="inline-flex items-center text-green-600 font-semibold">
+               <i data-lucide="check-circle" class="h-5 w-5 mr-1"></i>
+               Ya postulaste
+           </span>
+           {% else %}
+           <a href="{% url 'postular' oferta.id %}"
+               class="inline-flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm transition-colors duration-150">
+               <i data-lucide="send" class="h-4 w-4 mr-2"></i>
+               Postularme
+           </a>
+           {% endif %}
+       </div>
+   </div>
+   {% empty %}
+   <div class="text-center py-8">
+       <i data-lucide="search-x" class="h-12 w-12 mx-auto text-gray-400 mb-3"></i>
+       <p class="text-gray-500">No hay ofertas que coincidan con los filtros aplicados.</p>
+       <button onclick="window.location.href='{% url 'dashboard' %}'" class="mt-4 text-green-500 hover:text-green-600 font-medium">
+           Limpiar filtros
+       </button>
+   </div>
+   {% endfor %}
 </div>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+       // Inicializar los iconos de Lucide
+       lucide.createIcons();
+       
+       document.querySelectorAll('.like-btn').forEach(btn => {
+           btn.addEventListener('click', function () {
+               const ofertaId = this.getAttribute('data-oferta-id');
+               const heartIcon = this.querySelector('.heart-icon');
+
+               // Añadir efecto de pulsación
+               heartIcon.classList.add('scale-125');
+               setTimeout(() => {
+                   heartIcon.classList.remove('scale-125');
+               }, 200);
+
+               fetch(`/toggle-like/${ofertaId}/`, {
+                   method: 'POST',
+                   headers: {
+                       'X-CSRFToken': '{{ csrf_token }}',
+                       'Content-Type': 'application/json'
+                   },
+                   credentials: 'same-origin'
+               })
+               .then(response => response.json())
+               .then(data => {
+                   if (data.status === 'liked') {
+                       // Actualizar el corazón a verde y lleno
+                       heartIcon.setAttribute('fill', '#10b981');
+                       heartIcon.setAttribute('stroke', '#10b981');
+                       this.setAttribute('aria-label', 'Quitar de favoritos');
+                       // Mostrar notificación de agregado
+                       showNotification('Oferta agregada a favoritos', 'success');
+                   } else if (data.status === 'unliked') {
+                       // Actualizar el corazón a gris y vacío
+                       heartIcon.setAttribute('fill', 'none');
+                       heartIcon.setAttribute('stroke', '#9ca3af');
+                       this.setAttribute('aria-label', 'Añadir a favoritos');
+                       // Mostrar notificación de eliminado
+                       showNotification('Oferta eliminada de favoritos', 'info');
+                   }
+               })
+               .catch(error => {
+                   console.error('Error:', error);
+                   showNotification('Error al procesar tu solicitud', 'error');
+               });
+           });
+       });
+
+       function showNotification(message, type) {
+           const notification = document.createElement('div');
+           
+           // Determinar el color y el icono según el tipo
+           let bgColor, icon;
+           if (type === 'success') {
+               bgColor = 'bg-green-500';
+               icon = 'check-circle';
+           } else if (type === 'info') {
+               bgColor = 'bg-blue-500';
+               icon = 'info';
+           } else if (type === 'warning') {
+               bgColor = 'bg-yellow-500';
+               icon = 'alert-triangle';
+           } else {
+               bgColor = 'bg-red-500';
+               icon = 'alert-circle';
+           }
+           
+           notification.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-3 rounded-md shadow-lg z-50 flex items-center transform transition-all duration-300 translate-y-0 opacity-100`;
+           notification.innerHTML = `
+               <i data-lucide="${icon}" class="h-5 w-5 mr-2"></i>
+               <span>${message}</span>
+           `;
+           
+           document.body.appendChild(notification);
+           
+           // Inicializar el icono de Lucide
+           lucide.createIcons({
+               attrs: {
+                   class: ["stroke-current"]
+               },
+               elements: [notification]
+           });
+           
+           // Animación de salida
+           setTimeout(() => {
+               notification.classList.replace('translate-y-0', 'translate-y-2');
+               notification.classList.replace('opacity-100', 'opacity-0');
+               setTimeout(() => notification.remove(), 300);
+           }, 2700);
+       }
+   });
+</script>
 {% endblock %}

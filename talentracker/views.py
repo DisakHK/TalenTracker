@@ -11,6 +11,8 @@ from .forms import (
     PreguntaPerfilForm, OpcionFormSet, OfertaTrabajoForm,
     ConfiguracionNotificacionesForm
 )
+from django.http import JsonResponse
+from .models import LikeOferta
 
 # Home
 def home(request):
@@ -46,6 +48,7 @@ def dashboard(request):
         ofertas = ofertas.filter(nivel_academico=nivel_academico)
 
     postuladas = Postulacion.objects.filter(usuario=request.user).values_list('oferta_id', flat=True)
+    likes = LikeOferta.objects.filter(usuario=request.user).values_list('oferta_id', flat=True)
     notificaciones = Notificacion.objects.filter(usuario=request.user)
 
     context = {
@@ -56,6 +59,7 @@ def dashboard(request):
         'remoto': remoto,
         'nivel_academico': nivel_academico,
         'postuladas': postuladas,
+        'likes': likes,  # Nueva variable para likes
         'notificaciones': notificaciones,
     }
 
@@ -265,3 +269,32 @@ def obtener_preferencias_usuario(usuario):
     respuestas = RespuestaPerfil.objects.filter(usuario=usuario).select_related('pregunta', 'opcion')
     preferencias = {r.pregunta.texto: r.opcion.texto for r in respuestas}
     return preferencias
+
+@login_required
+def toggle_like(request, oferta_id):
+    if request.method == 'POST' and request.user.tipo_usuario == 'empleado':
+        oferta = get_object_or_404(OfertaTrabajo, id=oferta_id)
+        like, created = LikeOferta.objects.get_or_create(
+            usuario=request.user,
+            oferta=oferta
+        )
+        
+        if not created:
+            like.delete()
+            return JsonResponse({'status': 'unliked', 'message': 'Like eliminado'})
+        
+        return JsonResponse({'status': 'liked', 'message': 'Like agregado'})
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'}, status=400)
+
+@login_required
+def favoritos(request):
+    if request.user.tipo_usuario != 'empleado':
+        return redirect('dashboard')
+    
+    likes = LikeOferta.objects.filter(usuario=request.user).select_related('oferta')
+    ofertas = [like.oferta for like in likes]
+    
+    return render(request, 'favoritos.html', {
+        'ofertas': ofertas,
+        'notificaciones': Notificacion.objects.filter(usuario=request.user)
+    })

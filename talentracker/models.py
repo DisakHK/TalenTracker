@@ -123,3 +123,17 @@ class Notificacion(models.Model):
     
     def __str__(self):
         return f"{self.usuario.username} - {self.get_tipo_display()}"
+
+# Add this as a separate model class (not nested)
+class LikeOferta(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    oferta = models.ForeignKey(OfertaTrabajo, on_delete=models.CASCADE)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('usuario', 'oferta')  # Evita duplicados
+        verbose_name = 'Like a oferta'
+        verbose_name_plural = 'Likes a ofertas'
+
+    def __str__(self):
+        return f"{self.usuario.username} like a {self.oferta.titulo}"

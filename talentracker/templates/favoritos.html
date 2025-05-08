@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto bg-white shadow rounded p-6 mt-8">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Tus ofertas favoritas</h2>
+        <a href="{% url 'dashboard' %}" class="text-green-500 hover:text-green-600 flex items-center">
+            <i data-lucide="arrow-left" class="h-4 w-4 mr-1"></i>
+            Volver a ofertas
+        </a>
+    </div>
+
+    <!-- Notificaciones -->
+    {% if notificaciones %}
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+        <p class="font-bold flex items-center">
+            <i data-lucide="bell" class="h-5 w-5 mr-2"></i>
+            Tus Notificaciones
+            <span class="ml-2 inline-block bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                {{ notificaciones|length }}
+            </span>
+        </p>
+        <ul class="mt-2 list-disc list-inside">
+            {% for n in notificaciones %}
+                <li>{{ n.mensaje }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Ofertas favoritas -->
+    {% if ofertas %}
+        {% for oferta in ofertas %}
+        <div class="border-b border-gray-200 py-4 hover:bg-gray-50 transition-colors duration-150 rounded-md px-4">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-gray-900">{{ oferta.titulo }}</h3>
+                    <p class="text-gray-600 mt-1 mb-2">{{ oferta.descripcion }}</p>
+                    <div class="flex flex-wrap gap-2 text-sm text-gray-500 mb-3">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                            <i data-lucide="briefcase" class="h-3.5 w-3.5 mr-1"></i>
+                            {{ oferta.industria|capfirst }}
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                            <i data-lucide="map-pin" class="h-3.5 w-3.5 mr-1"></i>
+                            {{ oferta.ubicacion }}
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                            <i data-lucide="award" class="h-3.5 w-3.5 mr-1"></i>
+                            {{ oferta.nivel_experiencia|capfirst }}
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                            <i data-lucide="{% if oferta.remoto == 'si' %}wifi{% elif oferta.remoto == 'mixto' %}git-branch{% else %}building{% endif %}" class="h-3.5 w-3.5 mr-1"></i>
+                            {{ oferta.remoto|capfirst }}
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                            <i data-lucide="graduation-cap" class="h-3.5 w-3.5 mr-1"></i>
+                            {{ oferta.nivel_academico|capfirst }}
+                        </span>
+                    </div>
+                </div>
+                <button class="like-btn flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition-colors duration-150 group" data-oferta-id="{{ oferta.id }}" aria-label="Quitar de favoritos">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#10b981" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="heart-icon transition-all duration-300 transform group-hover:scale-110">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="mt-3">
+                {% if oferta.id in postuladas %}
+                <span class="inline-flex items-center text-green-600 font-semibold">
+                    <i data-lucide="check-circle" class="h-5 w-5 mr-1"></i>
+                    Ya postulaste
+                </span>
+                {% else %}
+                <a href="{% url 'postular' oferta.id %}"
+                    class="inline-flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm transition-colors duration-150">
+                    <i data-lucide="send" class="h-4 w-4 mr-2"></i>
+                    Postularme
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center py-12">
+            <i data-lucide="heart-off" class="h-16 w-16 mx-auto text-gray-300 mb-4"></i>
+            <p class="text-gray-500 text-lg">No tienes ofertas marcadas como favoritas.</p>
+            <a href="{% url 'dashboard' %}" class="mt-4 inline-block text-green-500 hover:text-green-600 font-medium">
+                Explorar ofertas disponibles
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar los iconos de Lucide
+    lucide.createIcons();
+    
+    document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const ofertaId = this.getAttribute('data-oferta-id');
+            const heartIcon = this.querySelector('.heart-icon');
+            
+            // Añadir efecto de pulsación
+            heartIcon.classList.add('scale-125');
+            setTimeout(() => {
+                heartIcon.classList.remove('scale-125');
+            }, 200);
+            
+            fetch(`/toggle-like/${ofertaId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'unliked') {
+                    // Mostrar notificación antes de recargar
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-3 rounded-md shadow-lg z-50 flex items-center';
+                    notification.innerHTML = `
+                        <i data-lucide="info" class="h-5 w-5 mr-2"></i>
+                        <span>Oferta eliminada de favoritos</span>
+                    `;
+                    document.body.appendChild(notification);
+                    
+                    // Inicializar el icono de Lucide en la notificación
+                    lucide.createIcons({
+                        elements: [notification]
+                    });
+                    
+                    // Esperar un momento y luego recargar
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 800);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Mostrar notificación de error
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-3 rounded-md shadow-lg z-50 flex items-center';
+                notification.innerHTML = `
+                    <i data-lucide="alert-circle" class="h-5 w-5 mr-2"></i>
+                    <span>Error al procesar tu solicitud</span>
+                `;
+                document.body.appendChild(notification);
+                
+                // Inicializar el icono de Lucide en la notificación
+                lucide.createIcons({
+                    elements: [notification]
+                });
+                
+                // Eliminar la notificación después de un tiempo
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            });
+        });
+    });
+});
+</script>
+{% endblock %}
