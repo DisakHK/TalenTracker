@@ -4,122 +4,111 @@
 {% block title %}Editar Perfil{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-10 mx-auto">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Editar Mi Perfil</h3>
+<div class="max-w-5xl mx-auto mt-10 px-4">
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+        <div class="bg-green-600 text-white px-6 py-4">
+            <h2 class="text-2xl font-semibold">Editar Mi Perfil</h2>
+        </div>
+
+        <div class="px-6 py-8">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 p-4 rounded text-white {% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'error' %}bg-red-500{% else %}bg-gray-500{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Nombre -->
+                    <div>
+                        <label for="{{ form.first_name.id_for_label }}" class="block font-medium text-gray-700">Nombre</label>
+                        {{ form.first_name|addclass:"mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" }}
+                        {% if form.first_name.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.first_name.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Apellido -->
+                    <div>
+                        <label for="{{ form.last_name.id_for_label }}" class="block font-medium text-gray-700">Apellido</label>
+                        {{ form.last_name|addclass:"mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" }}
+                        {% if form.last_name.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.last_name.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="{{ form.email.id_for_label }}" class="block font-medium text-gray-700">Correo electrónico *</label>
+                        {{ form.email|addclass:"mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" }}
+                        {% if form.email.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.email.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div>
+                        <label for="{{ form.telefono.id_for_label }}" class="block font-medium text-gray-700">Teléfono</label>
+                        {{ form.telefono|addclass:"mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" }}
+                        {% if form.telefono.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.telefono.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Fecha de nacimiento -->
+                    <div>
+                        <label for="{{ form.fecha_nacimiento.id_for_label }}" class="block font-medium text-gray-700">Fecha de nacimiento</label>
+                        {{ form.fecha_nacimiento|addclass:"mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" }}
+                        {% if form.fecha_nacimiento.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.fecha_nacimiento.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Género -->
+                    <div>
+                        <label for="{{ form.genero.id_for_label }}" class="block font-medium text-gray-700">Género</label>
+                        {{ form.genero|addclass:"mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" }}
+                        {% if form.genero.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ form.genero.errors }}</p>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="card-body">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
+
+                <!-- Biografía -->
+                <div>
+                    <label for="{{ form.biografia.id_for_label }}" class="block font-medium text-gray-700">Biografía / Resumen profesional</label>
+                    {{ form.biografia|addclass:"mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" }}
+                    {% if form.biografia.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.biografia.errors }}</p>
                     {% endif %}
-                    
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre</label>
-                                {{ form.first_name|addclass:"form-control" }}
-                                {% if form.first_name.errors %}
-                                    <div class="text-danger">
-                                        {{ form.first_name.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.last_name.id_for_label }}" class="form-label">Apellido</label>
-                                {{ form.last_name|addclass:"form-control" }}
-                                {% if form.last_name.errors %}
-                                    <div class="text-danger">
-                                        {{ form.last_name.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.email.id_for_label }}" class="form-label">Correo electrónico *</label>
-                                {{ form.email|addclass:"form-control" }}
-                                {% if form.email.errors %}
-                                    <div class="text-danger">
-                                        {{ form.email.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.telefono.id_for_label }}" class="form-label">Teléfono</label>
-                                {{ form.telefono|addclass:"form-control" }}
-                                {% if form.telefono.errors %}
-                                    <div class="text-danger">
-                                        {{ form.telefono.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.fecha_nacimiento.id_for_label }}" class="form-label">Fecha de nacimiento</label>
-                                {{ form.fecha_nacimiento|addclass:"form-control" }}
-                                {% if form.fecha_nacimiento.errors %}
-                                    <div class="text-danger">
-                                        {{ form.fecha_nacimiento.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.genero.id_for_label }}" class="form-label">Género</label>
-                                {{ form.genero|addclass:"form-select" }}
-                                {% if form.genero.errors %}
-                                    <div class="text-danger">
-                                        {{ form.genero.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-12 mb-3">
-                                <label for="{{ form.biografia.id_for_label }}" class="form-label">Biografía/Resumen profesional</label>
-                                {{ form.biografia|addclass:"form-control" }}
-                                {% if form.biografia.errors %}
-                                    <div class="text-danger">
-                                        {{ form.biografia.errors }}
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">Escribe un resumen sobre ti, tus habilidades y experiencia profesional.</div>
-                            </div>
-                            
-                            <div class="col-md-12 mb-3">
-                                <label for="{{ form.curriculum.id_for_label }}" class="form-label">Curriculum</label>
-                                {% if user.curriculum %}
-                                    <div class="mb-2">
-                                        <a href="{{ user.curriculum.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">Ver curriculum actual</a>
-                                    </div>
-                                {% endif %}
-                                {{ form.curriculum|addclass:"form-control" }}
-                                {% if form.curriculum.errors %}
-                                    <div class="text-danger">
-                                        {{ form.curriculum.errors }}
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">Formatos permitidos: PDF, DOC, DOCX</div>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{% url 'ver_perfil_empleado' %}" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                        </div>
-                    </form>
+                    <p class="text-sm text-gray-500 mt-1">Escribe un resumen sobre ti, tus habilidades y experiencia profesional.</p>
                 </div>
-            </div>
+
+                <!-- Curriculum -->
+                <div>
+                    <label for="{{ form.curriculum.id_for_label }}" class="block font-medium text-gray-700">Curriculum</label>
+                    {% if user.curriculum %}
+                        <a href="{{ user.curriculum.url }}" target="_blank" class="inline-block mb-2 text-green-700 hover:underline">Ver curriculum actual</a>
+                    {% endif %}
+                    {{ form.curriculum|addclass:"mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" }}
+                    {% if form.curriculum.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.curriculum.errors }}</p>
+                    {% endif %}
+                    <p class="text-sm text-gray-500 mt-1">Formatos permitidos: PDF, DOC, DOCX</p>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex justify-between items-center pt-4 border-t">
+                    <a href="{% url 'ver_perfil_empleado' %}" class="text-gray-600 hover:text-gray-800">Cancelar</a>
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded transition">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

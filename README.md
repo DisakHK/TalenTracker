@@ -59,7 +59,3 @@ Daniel (Scrum Master)
 Emanuel (Full Stack Developer)
 
 Alejandro (Data Scientist)
-
-
-
-
