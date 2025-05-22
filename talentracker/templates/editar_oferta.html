@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load form_tags %}
+
+{% block title %}Editar Oferta de Trabajo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Editar Oferta: {{ oferta.titulo }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.titulo.id_for_label }}" class="form-label">Título *</label>
+                                {{ form.titulo|addclass:"form-control" }}
+                                {% if form.titulo.errors %}
+                                    <div class="text-danger">
+                                        {{ form.titulo.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción *</label>
+                                {{ form.descripcion|addclass:"form-control" }}
+                                {% if form.descripcion.errors %}
+                                    <div class="text-danger">
+                                        {{ form.descripcion.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.industria.id_for_label }}" class="form-label">Industria *</label>
+                                {{ form.industria|addclass:"form-select" }}
+                                {% if form.industria.errors %}
+                                    <div class="text-danger">
+                                        {{ form.industria.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.ubicacion.id_for_label }}" class="form-label">Ubicación *</label>
+                                {{ form.ubicacion|addclass:"form-control" }}
+                                {% if form.ubicacion.errors %}
+                                    <div class="text-danger">
+                                        {{ form.ubicacion.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.nivel_experiencia.id_for_label }}" class="form-label">Nivel de Experiencia *</label>
+                                {{ form.nivel_experiencia|addclass:"form-select" }}
+                                {% if form.nivel_experiencia.errors %}
+                                    <div class="text-danger">
+                                        {{ form.nivel_experiencia.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.nivel_academico.id_for_label }}" class="form-label">Nivel Académico</label>
+                                {{ form.nivel_academico|addclass:"form-select" }}
+                                {% if form.nivel_academico.errors %}
+                                    <div class="text-danger">
+                                        {{ form.nivel_academico.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.salario_estimado.id_for_label }}" class="form-label">Salario Estimado</label>
+                                {{ form.salario_estimado|addclass:"form-control" }}
+                                {% if form.salario_estimado.errors %}
+                                    <div class="text-danger">
+                                        {{ form.salario_estimado.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.remoto.id_for_label }}" class="form-label">Modalidad de Trabajo *</label>
+                                {{ form.remoto|addclass:"form-select" }}
+                                {% if form.remoto.errors %}
+                                    <div class="text-danger">
+                                        {{ form.remoto.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Habilidades Requeridas</label>
+                                <div id="habilidades-container">
+                                    <div class="mb-3">
+                                        <h5 class="text-secondary">Habilidades de la industria</h5>
+                                        <div id="habilidades-industria" class="d-flex flex-wrap gap-2">
+                                            <!-- Aquí se cargarán dinámicamente las habilidades de la industria -->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h5 class="text-secondary">Habilidades blandas</h5>
+                                        <div id="habilidades-blandas" class="d-flex flex-wrap gap-2">
+                                            {% for value, label in form.HABILIDADES_BLANDAS %}
+                                            <div class="form-check">
+                                                <input type="checkbox" name="habilidades" 
+                                                       value="{{ value }}" 
+                                                       id="id_habilidad_{{ value|slugify }}" 
+                                                       class="form-check-input"
+                                                       {% if value in form.initial.habilidades %}checked{% endif %}>
+                                                <label for="id_habilidad_{{ value|slugify }}" class="form-check-label">
+                                                    {{ label }}
+                                                </label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.habilidades_personalizadas.id_for_label }}" class="form-label">
+                                    {{ form.habilidades_personalizadas.label }}
+                                </label>
+                                {{ form.habilidades_personalizadas|addclass:"form-control" }}
+                                <div class="form-text">{{ form.habilidades_personalizadas.help_text }}</div>
+                                {% if form.habilidades_personalizadas.errors %}
+                                    <div class="text-danger">
+                                        {{ form.habilidades_personalizadas.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'ver_ofertas_empresa' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Datos de habilidades por industria
+        const habilidadesPorIndustria = {{ habilidades_por_industria_json|safe }};
+        const habilidadesBlandas = {{ habilidades_blandas_json|safe }};
+        const habilidadesActuales = {{ form.initial.habilidades|safe|default:"[]" }};
+        
+        // Elemento select de industria
+        const selectIndustria = document.getElementById('id_industria');
+        // Contenedor de habilidades de industria
+        const habilidadesIndustriaContainer = document.getElementById('habilidades-industria');
+        
+        // Función para actualizar las habilidades según la industria seleccionada
+        function actualizarHabilidades() {
+            const industriaSeleccionada = selectIndustria.value;
+            
+            // Limpiar el contenedor de habilidades de industria
+            habilidadesIndustriaContainer.innerHTML = '';
+            
+            // Si hay una industria seleccionada y tiene habilidades
+            if (industriaSeleccionada && habilidadesPorIndustria[industriaSeleccionada]) {
+                const habilidades = habilidadesPorIndustria[industriaSeleccionada];
+                
+                // Agregar cada habilidad al contenedor
+                for (const [valor, etiqueta] of Object.entries(habilidades)) {
+                    const div = document.createElement('div');
+                    div.className = 'form-check';
+                    
+                    // Verificar si la habilidad ya estaba seleccionada
+                    const checked = habilidadesActuales.includes(valor) ? 'checked' : '';
+                    
+                    div.innerHTML = `
+                        <input type="checkbox" name="habilidades" 
+                               value="${valor}" 
+                               id="id_habilidad_${valor.replace(/\s+/g, '_').toLowerCase()}" 
+                               class="form-check-input" ${checked}>
+                        <label for="id_habilidad_${valor.replace(/\s+/g, '_').toLowerCase()}" class="form-check-label">
+                            ${etiqueta}
+                        </label>
+                    `;
+                    habilidadesIndustriaContainer.appendChild(div);
+                }
+            } else {
+                // Mostrar mensaje si no hay habilidades para esta industria
+                habilidadesIndustriaContainer.innerHTML = '<p>Selecciona una industria para ver habilidades específicas</p>';
+            }
+        }
+        
+        // Ejecutar la función al cargar la página
+        actualizarHabilidades();
+        
+        // Ejecutar la función cuando cambie la industria seleccionada
+        selectIndustria.addEventListener('change', actualizarHabilidades);
+    });
+</script>
+{% endblock %} 

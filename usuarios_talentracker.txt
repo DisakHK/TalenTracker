@@ -1,0 +1,48 @@
+CREDENCIALES PARA TALENTRACKER
+==============================
+
+USUARIOS EMPLEADOS:
+------------------
+| Usuario          | Contraseña     | Perfil                                        |
+|------------------|----------------|-----------------------------------------------|
+| juan_perez       | juan2023       | Ingeniero en informática - desarrollo web     |
+| maria_rodriguez  | maria2023      | Enfermera especializada en cuidados intensivos|
+| carlos_gonzalez  | carlos2023     | Contador auditor - sector financiero          |
+| ana_martinez     | ana2023        | Diseñadora UX/UI                              |
+| pedro_sanchez    | pedro2023      | Profesor de matemáticas                       |
+| laura_diaz       | laura2023      | Ingeniera comercial - análisis de datos       |
+| diego_lopez      | diego2023      | Desarrollador backend                         |
+| sofia_torres     | sofia2023      | Psicóloga clínica                             |
+| javier_navarro   | javier2023     | Técnico en administración - logística         |
+| carolina_munoz   | carolina2023   | Periodista - medios digitales                 |
+
+USUARIOS EMPRESA:
+---------------
+| Usuario          | Contraseña     | Empresa                                       |
+|------------------|----------------|-----------------------------------------------|
+| tech_innovators  | tech2023       | Tech Innovators SpA (tecnología)              |
+| salud_integral   | salud2023      | Salud Integral Ltda (salud)                   |
+| finanzas_globales| finanzas2023   | Finanzas Globales S.A. (finanzas)             |
+| edu_excellence   | edu2023        | Educación Excellence S.A. (educación)         |
+| service_solutions| service2023    | Service Solutions Ltda (servicios)            |
+
+INSTRUCCIONES PARA PROBAR EL SISTEMA DE RECOMENDACIONES:
+------------------------------------------------------
+1. Accede a la aplicación en: http://127.0.0.1:8080/ (o el puerto que esté funcionando)
+
+2. Para probar como EMPLEADO:
+   - Inicia sesión con cualquiera de los usuarios empleados
+   - En el dashboard encontrarás la opción "Recomendaciones" en el menú superior
+   - Haz clic en "Recomendaciones" para ver las ofertas personalizadas según el perfil
+   - Las recomendaciones se basan en:
+     * Ofertas a las que el usuario dio like
+     * Tiempo de visualización por industria/experiencia
+     * Similitud con otras ofertas de interés
+
+3. Para probar como EMPRESA:
+   - Inicia sesión con cualquiera de los usuarios empresa
+   - Podrás ver las ofertas publicadas y las postulaciones recibidas
+
+NOTA: El sistema de recomendaciones ya contiene suficientes datos para funcionar 
+correctamente gracias a las interacciones generadas automáticamente (likes, vistas
+y postulaciones). 

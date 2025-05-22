@@ -1,25 +1,253 @@
-<form method="post" class="space-y-5 bg-white shadow-md rounded-lg p-6">
+{% extends 'base.html' %}
+{% load form_tags %}
+
+{% block title %}Crear Oferta de Trabajo{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-10">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Crear Nueva Oferta de Trabajo</h2>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 p-3 rounded
+                        {% if message.tags == 'error' %}bg-red-100 text-red-700 border border-red-200
+                        {% elif message.tags == 'success' %}bg-green-100 text-green-700 border border-green-200
+                        {% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post">
     {% csrf_token %}
 
-    {% for field in form %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- Información básica -->
+                    <div class="md:col-span-2">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Información básica</h3>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="{{ form.titulo.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Título *
+                        </label>
+                        {{ form.titulo|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        <p class="text-xs text-gray-500 mt-1">Un título claro y atractivo aumenta el interés en tu oferta</p>
+                        {% if form.titulo.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.titulo.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="{{ form.descripcion.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Descripción *
+                        </label>
+                        {{ form.descripcion|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        <p class="text-xs text-gray-500 mt-1">Describe detalladamente las responsabilidades y requisitos</p>
+                        {% if form.descripcion.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.descripcion.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Categorización -->
+                    <div class="md:col-span-2 mt-4">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Categorización</h3>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.industria.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Industria *
+                        </label>
+                        {{ form.industria|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        {% if form.industria.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.industria.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.ubicacion.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Ubicación *
+                        </label>
+                        {{ form.ubicacion|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        {% if form.ubicacion.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.ubicacion.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.nivel_experiencia.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Nivel de experiencia *
+                        </label>
+                        {{ form.nivel_experiencia|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        {% if form.nivel_experiencia.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.nivel_experiencia.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.nivel_academico.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Nivel académico
+                        </label>
+                        {{ form.nivel_academico|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        {% if form.nivel_academico.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.nivel_academico.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Modalidad y salario -->
+                    <div class="md:col-span-2 mt-4">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Modalidad y compensación</h3>
+                    </div>
+                    
         <div>
-            <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-gray-800 mb-1">
-                {{ field.label }}
+                        <label for="{{ form.remoto.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Modalidad de trabajo *
             </label>
-            {{ field }}
-            {% if field.help_text %}
-                <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                        {{ form.remoto|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        {% if form.remoto.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.remoto.errors|striptags }}</p>
             {% endif %}
-            {% if field.errors %}
-                <p class="text-sm text-red-600 mt-1">{{ field.errors.0 }}</p>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.salario_estimado.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Salario estimado
+                        </label>
+                        {{ form.salario_estimado|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        {% if form.salario_estimado.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.salario_estimado.errors|striptags }}</p>
             {% endif %}
+                    </div>
+                    
+                    <!-- Habilidades requeridas -->
+                    <div class="md:col-span-2 mt-4">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Habilidades requeridas</h3>
+                    </div>
+                    
+                    <div class="md:col-span-2 p-3 mb-4 bg-blue-50 border border-blue-100 rounded text-sm text-blue-600">
+                        Las habilidades se mostrarán según la industria seleccionada
+                    </div>
+                    
+                    <div class="md:col-span-2 mb-4">
+                        <h4 class="font-medium text-gray-700 mb-2">Habilidades específicas de la industria</h4>
+                        <div id="habilidades-industria" class="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded">
+                            <p class="col-span-2 text-sm text-gray-500 italic">Selecciona una industria para ver las habilidades correspondientes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-2 mb-4">
+                        <h4 class="font-medium text-gray-700 mb-2">Habilidades blandas</h4>
+                        <div id="habilidades-blandas" class="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded">
+                            {% for value, label in form.HABILIDADES_BLANDAS %}
+                            <div class="flex items-center">
+                                <input type="checkbox" name="habilidades" 
+                                       value="{{ value }}" 
+                                       id="id_habilidad_{{ value|slugify }}" 
+                                       class="mr-2">
+                                <label for="id_habilidad_{{ value|slugify }}" class="text-sm">
+                                    {{ label }}
+                                </label>
         </div>
     {% endfor %}
-
-    <div class="pt-4">
-        <button type="submit"
-                class="w-full bg-green-500 hover:bg-green-600 transition duration-150 ease-in-out text-white font-semibold py-2 px-4 rounded shadow">
-            Publicar oferta
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="{{ form.habilidades_personalizadas.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Otras habilidades
+                        </label>
+                        {{ form.habilidades_personalizadas|addclass:"w-full border border-gray-300 rounded p-2" }}
+                        <p class="text-xs text-gray-500 mt-1">{{ form.habilidades_personalizadas.help_text }}</p>
+                        {% if form.habilidades_personalizadas.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.habilidades_personalizadas.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-3 mt-6">
+                    <a href="{% url 'dashboard_empresa' %}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-800 transition-colors">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition-colors">
+                        Publicar Oferta
         </button>
     </div>
 </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Datos de habilidades por industria
+        const habilidadesPorIndustria = {{ habilidades_por_industria_json|safe }};
+        const habilidadesBlandas = {{ habilidades_blandas_json|safe }};
+        
+        // Elemento select de industria
+        const selectIndustria = document.getElementById('id_industria');
+        // Contenedor de habilidades de industria
+        const habilidadesIndustriaContainer = document.getElementById('habilidades-industria');
+        
+        // Función para actualizar las habilidades según la industria seleccionada
+        function actualizarHabilidades() {
+            const industriaSeleccionada = selectIndustria.value;
+            
+            // Limpiar el contenedor de habilidades de industria
+            habilidadesIndustriaContainer.innerHTML = '';
+            
+            // Si hay una industria seleccionada y tiene habilidades
+            if (industriaSeleccionada && habilidadesPorIndustria[industriaSeleccionada]) {
+                const habilidades = habilidadesPorIndustria[industriaSeleccionada];
+                
+                // Si no hay habilidades específicas para esta industria
+                if (Object.keys(habilidades).length === 0) {
+                    habilidadesIndustriaContainer.innerHTML = '<p class="col-span-2 text-sm text-gray-500 italic">No hay habilidades específicas definidas para esta industria</p>';
+                    return;
+                }
+                
+                // Agregar cada habilidad al contenedor
+                for (const [valor, etiqueta] of Object.entries(habilidades)) {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center';
+                    div.innerHTML = `
+                        <input type="checkbox" name="habilidades" 
+                               value="${valor}" 
+                               id="id_habilidad_${valor.replace(/\s+/g, '_').toLowerCase()}" 
+                               class="mr-2">
+                        <label for="id_habilidad_${valor.replace(/\s+/g, '_').toLowerCase()}" class="text-sm">
+                            ${etiqueta}
+                        </label>
+                    `;
+                    habilidadesIndustriaContainer.appendChild(div);
+                }
+            } else {
+                // Mostrar mensaje si no hay habilidades para esta industria o no se ha seleccionado industria
+                habilidadesIndustriaContainer.innerHTML = '<p class="col-span-2 text-sm text-gray-500 italic">Selecciona una industria para ver habilidades específicas</p>';
+            }
+        }
+        
+        // Ejecutar la función al cargar la página
+        actualizarHabilidades();
+        
+        // Ejecutar la función cuando cambie la industria seleccionada
+        selectIndustria.addEventListener('change', actualizarHabilidades);
+        
+        // Marcar las habilidades ya seleccionadas (para edición)
+        {% if form.instance.pk and form.instance.habilidades %}
+            const habilidadesSeleccionadas = {{ form.instance.habilidades|safe }};
+            if (habilidadesSeleccionadas) {
+                setTimeout(() => {
+                    document.querySelectorAll('input[name="habilidades"]').forEach(checkbox => {
+                        if (habilidadesSeleccionadas.includes(checkbox.value)) {
+                            checkbox.checked = true;
+                        }
+                    });
+                }, 100);
+            }
+        {% endif %}
+    });
+</script>
+
+{% endblock %}

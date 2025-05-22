@@ -13,6 +13,8 @@ class Usuario(AbstractUser):
     telefono = models.CharField(max_length=15, blank=True, null=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
     curriculum = models.FileField(upload_to='curriculos/', null=True, blank=True)
+    genero = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Femenino'), ('O', 'Otro')], blank=True, null=True)
+    biografia = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.username
@@ -71,7 +73,7 @@ class OfertaTrabajo(models.Model):
     ubicacion = models.CharField(max_length=100, default='No especificada')
     nivel_experiencia = models.CharField(max_length=20, choices=EXPERIENCIA, default='junior')
     salario_estimado = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    remoto = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No'), ('mixto', 'Mixto')], default='no')
+    remoto = models.CharField(max_length=20, choices=[('presencial', 'Presencial'), ('remoto', 'Remoto'), ('hibrido', 'Híbrido')], default='presencial')
     nivel_academico = models.CharField(max_length=20, choices=[
         ('ninguno', 'Ninguno'),
         ('secundaria', 'Secundaria'),
@@ -137,3 +139,52 @@ class LikeOferta(models.Model):
 
     def __str__(self):
         return f"{self.usuario.username} like a {self.oferta.titulo}"
+
+# Modelo para trackear las vistas de ofertas y tiempo de interacción
+class VistaOferta(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    oferta = models.ForeignKey(OfertaTrabajo, on_delete=models.CASCADE)
+    timestamp_inicio = models.DateTimeField(auto_now_add=True)
+    duracion_segundos = models.IntegerField(default=0)  # Duración en segundos que el usuario vio la oferta
+    interaccion_completa = models.BooleanField(default=False)  # Si el usuario terminó de ver la oferta
+    
+    class Meta:
+        verbose_name = 'Vista de oferta'
+        verbose_name_plural = 'Vistas de ofertas'
+        
+    def __str__(self):
+        return f"{self.usuario.username} vio {self.oferta.titulo} por {self.duracion_segundos}s"
+
+class PreferenciaBusqueda(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='preferencias_busqueda')
+    nombre = models.CharField(max_length=100)
+    nivel_experiencia = models.CharField(max_length=20, choices=OfertaTrabajo.EXPERIENCIA, blank=True, null=True)
+    industria = models.CharField(max_length=50, choices=OfertaTrabajo.INDUSTRIAS, blank=True, null=True)
+    ubicacion = models.CharField(max_length=100, blank=True, null=True)
+    remoto = models.CharField(max_length=20, choices=[('presencial', 'Presencial'), ('remoto', 'Remoto'), ('hibrido', 'Híbrido')], blank=True, null=True)
+    nivel_academico = models.CharField(max_length=20, choices=[
+        ('ninguno', 'Ninguno'),
+        ('secundaria', 'Secundaria'),
+        ('tecnico', 'Técnico'),
+        ('universitario', 'Universitario'),
+        ('posgrado', 'Posgrado')
+    ], blank=True, null=True)
+    habilidades = models.JSONField(default=list, blank=True)
+    predeterminado = models.BooleanField(default=False)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Preferencia de búsqueda'
+        verbose_name_plural = 'Preferencias de búsqueda'
+        
+    def __str__(self):
+        return f"{self.nombre} - {self.usuario.username}"
+        
+    def save(self, *args, **kwargs):
+        # Si se marca como predeterminado, desmarcar otros predeterminados del usuario
+        if self.predeterminado:
+            PreferenciaBusqueda.objects.filter(
+                usuario=self.usuario, 
+                predeterminado=True
+            ).exclude(pk=self.pk).update(predeterminado=False)
+        super().save(*args, **kwargs)

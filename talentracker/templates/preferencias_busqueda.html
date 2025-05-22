@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Preferencias de Búsqueda{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Preferencias de Búsqueda</h2>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="row">
+                <!-- Lista de preferencias guardadas -->
+                <div class="col-md-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Mis Preferencias Guardadas</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if preferencias %}
+                                <div class="list-group">
+                                    {% for preferencia in preferencias %}
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-1">{{ preferencia.nombre }}</h5>
+                                                <span class="badge {% if preferencia.predeterminado %}bg-success{% else %}bg-secondary{% endif %} rounded-pill">
+                                                    {% if preferencia.predeterminado %}Predeterminado{% else %}Guardado{% endif %}
+                                                </span>
+                                            </div>
+                                            <p class="mb-1">
+                                                {% if preferencia.industria %}
+                                                    <strong>Industria:</strong> {{ preferencia.get_industria_display }}<br>
+                                                {% endif %}
+                                                {% if preferencia.nivel_experiencia %}
+                                                    <strong>Experiencia:</strong> {{ preferencia.get_nivel_experiencia_display }}<br>
+                                                {% endif %}
+                                                {% if preferencia.ubicacion %}
+                                                    <strong>Ubicación:</strong> {{ preferencia.ubicacion }}<br>
+                                                {% endif %}
+                                                {% if preferencia.remoto %}
+                                                    <strong>Modalidad:</strong> {{ preferencia.get_remoto_display }}<br>
+                                                {% endif %}
+                                                {% if preferencia.nivel_academico %}
+                                                    <strong>Nivel académico:</strong> {{ preferencia.get_nivel_academico_display }}<br>
+                                                {% endif %}
+                                                {% if preferencia.habilidades %}
+                                                    <strong>Habilidades:</strong> {{ preferencia.habilidades|join:", " }}<br>
+                                                {% endif %}
+                                            </p>
+                                            <div class="d-flex justify-content-end gap-2 mt-2">
+                                                <a href="{% url 'aplicar_preferencia' preferencia.id %}" class="btn btn-sm btn-success">
+                                                    Aplicar
+                                                </a>
+                                                <a href="{% url 'editar_preferencia' preferencia.id %}" class="btn btn-sm btn-warning">
+                                                    Editar
+                                                </a>
+                                                <a href="{% url 'eliminar_preferencia' preferencia.id %}" 
+                                                   onclick="return confirm('¿Estás seguro de que quieres eliminar esta preferencia?');" 
+                                                   class="btn btn-sm btn-danger">
+                                                    Eliminar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted">No tienes preferencias guardadas.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulario para crear nueva preferencia -->
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Nueva Preferencia</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre de la preferencia *</label>
+                                    {{ form.nombre }}
+                                    {% if form.nombre.errors %}
+                                        <div class="text-danger">{{ form.nombre.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.industria.id_for_label }}" class="form-label">Industria</label>
+                                    {{ form.industria }}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.nivel_experiencia.id_for_label }}" class="form-label">Nivel de experiencia</label>
+                                    {{ form.nivel_experiencia }}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.ubicacion.id_for_label }}" class="form-label">Ubicación</label>
+                                    {{ form.ubicacion }}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.remoto.id_for_label }}" class="form-label">Modalidad de trabajo</label>
+                                    {{ form.remoto }}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.nivel_academico.id_for_label }}" class="form-label">Nivel académico</label>
+                                    {{ form.nivel_academico }}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.habilidades.id_for_label }}" class="form-label">Habilidades</label>
+                                    {{ form.habilidades }}
+                                    <div class="form-text">Mantén presionada la tecla Ctrl (o Command en Mac) para seleccionar múltiples habilidades.</div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    {{ form.predeterminado }}
+                                    <label for="{{ form.predeterminado.id_for_label }}" class="form-check-label">
+                                        Usar como filtro predeterminado
+                                    </label>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Guardar Preferencia</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

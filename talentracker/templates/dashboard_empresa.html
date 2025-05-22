@@ -4,9 +4,17 @@
 <div class="max-w-5xl mx-auto mt-10">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Mis Ofertas Publicadas</h2>
-        <a href="{% url 'crear_oferta' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-            Nueva oferta
-        </a>
+        <div class="flex space-x-2">
+            <a href="{% url 'generar_reporte' %}" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded">
+                Reportes
+            </a>
+            <a href="{% url 'preferencias_busqueda' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                Preferencias de búsqueda
+            </a>
+            <a href="{% url 'crear_oferta' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                Nueva oferta
+            </a>
+        </div>
     </div>
 
     {% for oferta in ofertas %}
@@ -20,7 +28,11 @@
             {% if oferta.postulaciones.all %}
                 <ul class="list-disc pl-6 text-gray-800">
                     {% for postulacion in oferta.postulaciones.all %}
-                        <li>{{ postulacion.usuario.username }} — {{ postulacion.fecha_postulacion|date:"d/m/Y H:i" }}</li>
+                        <li>
+                            <a href="{% url 'ver_detalle_postulante' oferta.id postulacion.usuario.id %}" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                {{ postulacion.usuario.username }}
+                            </a> — {{ postulacion.fecha_postulacion|date:"d/m/Y H:i" }}
+                        </li>
                     {% endfor %}
                 </ul>
             {% else %}
@@ -28,8 +40,12 @@
             {% endif %}
         </div>
 
-        <!-- ✅ Aquí va el botón de eliminar dentro del div de cada oferta -->
-        <div class="mt-4 flex justify-end">
+        <!-- Botones de acción -->
+        <div class="mt-4 flex justify-end space-x-2">
+            <a href="{% url 'editar_oferta' oferta.id %}" 
+               class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+                ✏️ Editar
+            </a>
             <a href="{% url 'eliminar_oferta' oferta.id %}" 
                onclick="return confirm('¿Estás seguro de que quieres eliminar esta oferta?');"
                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
@@ -41,17 +57,4 @@
     <p class="text-gray-500">No has publicado ninguna oferta todavía.</p>
 {% endfor %}
 </div>
-<div class="mt-4 flex justify-end">
-    {% if oferta.id %}
-        <a href="{% url 'eliminar_oferta' oferta.id %}" 
-           onclick="return confirm('¿Estás seguro de que quieres eliminar esta oferta?');"
-           class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
-            Eliminar
-        </a>
-    {% endif %}
-</div>
-
-
-
-
 {% endblock %}

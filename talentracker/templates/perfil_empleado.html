@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Mi Perfil</h3>
+                    <a href="{% url 'editar_perfil_empleado' %}" class="btn btn-light">Editar Perfil</a>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4 class="text-primary">Información Personal</h4>
+                            <dl class="row">
+                                <dt class="col-sm-4">Nombre:</dt>
+                                <dd class="col-sm-8">{{ usuario.get_full_name|default:"No especificado" }}</dd>
+                                
+                                <dt class="col-sm-4">Usuario:</dt>
+                                <dd class="col-sm-8">{{ usuario.username }}</dd>
+                                
+                                <dt class="col-sm-4">Email:</dt>
+                                <dd class="col-sm-8">{{ usuario.email }}</dd>
+                                
+                                <dt class="col-sm-4">Teléfono:</dt>
+                                <dd class="col-sm-8">{{ usuario.telefono|default:"No especificado" }}</dd>
+                                
+                                <dt class="col-sm-4">Fecha de nacimiento:</dt>
+                                <dd class="col-sm-8">{{ usuario.fecha_nacimiento|date:"d/m/Y"|default:"No especificada" }}</dd>
+                                
+                                <dt class="col-sm-4">Género:</dt>
+                                <dd class="col-sm-8">
+                                    {% if usuario.genero == 'M' %}
+                                        Masculino
+                                    {% elif usuario.genero == 'F' %}
+                                        Femenino
+                                    {% elif usuario.genero == 'O' %}
+                                        Otro
+                                    {% else %}
+                                        No especificado
+                                    {% endif %}
+                                </dd>
+                            </dl>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h4 class="text-primary">Curriculum</h4>
+                            {% if usuario.curriculum %}
+                                <p>
+                                    <a href="{{ usuario.curriculum.url }}" target="_blank" class="btn btn-outline-primary">
+                                        <i class="fa fa-file-pdf"></i> Ver Curriculum
+                                    </a>
+                                </p>
+                            {% else %}
+                                <p class="text-muted">No has subido tu curriculum aún.</p>
+                            {% endif %}
+                            
+                            <h4 class="text-primary mt-4">Biografía</h4>
+                            {% if usuario.biografia %}
+                                <p>{{ usuario.biografia }}</p>
+                            {% else %}
+                                <p class="text-muted">No has añadido una biografía o resumen profesional.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <h4 class="text-primary border-top pt-3">Mis Postulaciones</h4>
+                    {% if postulaciones %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Oferta</th>
+                                        <th>Empresa</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for postulacion in postulaciones %}
+                                        <tr>
+                                            <td>{{ postulacion.oferta.titulo }}</td>
+                                            <td>{{ postulacion.oferta.empresa.username }}</td>
+                                            <td>{{ postulacion.fecha_postulacion|date:"d/m/Y H:i" }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No te has postulado a ninguna oferta todavía.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

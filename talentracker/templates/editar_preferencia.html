@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Preferencia de Búsqueda{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Editar Preferencia: {{ preferencia.nombre }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre de la preferencia *</label>
+                            {{ form.nombre }}
+                            {% if form.nombre.errors %}
+                                <div class="text-danger">{{ form.nombre.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.industria.id_for_label }}" class="form-label">Industria</label>
+                            {{ form.industria }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.nivel_experiencia.id_for_label }}" class="form-label">Nivel de experiencia</label>
+                            {{ form.nivel_experiencia }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.ubicacion.id_for_label }}" class="form-label">Ubicación</label>
+                            {{ form.ubicacion }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.remoto.id_for_label }}" class="form-label">Modalidad de trabajo</label>
+                            {{ form.remoto }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.nivel_academico.id_for_label }}" class="form-label">Nivel académico</label>
+                            {{ form.nivel_academico }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.habilidades.id_for_label }}" class="form-label">Habilidades</label>
+                            {{ form.habilidades }}
+                            <div class="form-text">Mantén presionada la tecla Ctrl (o Command en Mac) para seleccionar múltiples habilidades.</div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.predeterminado }}
+                            <label for="{{ form.predeterminado.id_for_label }}" class="form-check-label">
+                                Usar como filtro predeterminado
+                            </label>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'preferencias_busqueda' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
