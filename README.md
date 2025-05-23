@@ -47,6 +47,7 @@ source env/bin/activate  # En Windows: env\Scripts\activate
 ### 3.  Inicia el servidor de desarrollo
 
 ```
+pip install -r requirements.txt
 python manage.py runserver
 ```
 
