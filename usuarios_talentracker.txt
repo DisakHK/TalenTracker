@@ -46,3 +46,25 @@ INSTRUCCIONES PARA PROBAR EL SISTEMA DE RECOMENDACIONES:
 NOTA: El sistema de recomendaciones ya contiene suficientes datos para funcionar 
 correctamente gracias a las interacciones generadas automáticamente (likes, vistas
 y postulaciones). 
+
+Usuarios de Tecnología:
+Usuario: empleado_tecnologia_1
+Usuario: empleado_tecnologia_2
+Usuarios de Educación:
+Usuario: empleado_educacion_1
+Usuario: empleado_educacion_2
+Usuarios de Finanzas:
+Usuario: empleado_finanzas_1
+Usuario: empleado_finanzas_2
+Usuarios de Salud:
+Usuario: empleado_salud_1
+Usuario: empleado_salud_2
+Usuarios de Servicios:
+Usuario: empleado_servicios_1
+Usuario: empleado_servicios_2
+Para todos los usuarios, la contraseña es: empleado2023
+Cada usuario está enfocado en su industria específica y:
+Tiene un perfil profesional con habilidades relacionadas a su industria
+Ha dado like al 70% de las ofertas de su industria
+Se ha postulado al 50% de las ofertas de su industria
+Puedes usar cualquiera de estos usuarios para probar el sistema de recomendaciones, likes y postulaciones.

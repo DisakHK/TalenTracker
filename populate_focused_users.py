@@ -58,6 +58,9 @@ def crear_usuario_enfocado(industria, numero):
     email = f"{username}@example.com"
     perfil = PERFILES_POR_INDUSTRIA[industria]
     
+    # Eliminar usuario si ya existe
+    Usuario.objects.filter(username=username).delete()
+    
     # Crear usuario
     usuario = Usuario.objects.create_user(
         username=username,
