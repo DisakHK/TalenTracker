@@ -188,3 +188,28 @@ class PreferenciaBusqueda(models.Model):
                 predeterminado=True
             ).exclude(pk=self.pk).update(predeterminado=False)
         super().save(*args, **kwargs)
+
+class PerfilProfesional(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    habilidades = models.JSONField(default=list)
+    nivel_experiencia = models.CharField(max_length=20, choices=[
+        ('junior', 'Junior'),
+        ('intermedio', 'Intermedio'),
+        ('senior', 'Senior')
+    ], default='junior')
+    ubicacion = models.CharField(max_length=100, default='No especificada')
+    preferencia_modalidad = models.CharField(max_length=20, choices=[
+        ('presencial', 'Presencial'),
+        ('remoto', 'Remoto'),
+        ('mixto', 'Mixto')
+    ], default='presencial')
+    nivel_academico = models.CharField(max_length=20, choices=[
+        ('ninguno', 'Ninguno'),
+        ('secundaria', 'Secundaria'),
+        ('tecnico', 'Técnico'),
+        ('universitario', 'Universitario'),
+        ('posgrado', 'Posgrado')
+    ], default='ninguno')
+    
+    def __str__(self):
+        return f"Perfil de {self.usuario.username}"

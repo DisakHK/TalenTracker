@@ -27,6 +27,7 @@ urlpatterns = [
     path('empresa/editar-oferta/<int:oferta_id>/', talenTracker.editar_oferta, name='editar_oferta'),
     path('postular/<int:oferta_id>/', talenTracker.postular, name='postular'),
     path('oferta/<int:oferta_id>/eliminar/',talenTracker.eliminar_oferta, name='eliminar_oferta'),
+    path('oferta/<int:oferta_id>/', talenTracker.ver_detalle_oferta, name='ver_detalle_oferta'),
    
     # Preguntas de perfil (admin)
     path('guardar-respuestas/', talenTracker.guardar_respuestas, name='guardar_respuestas'),
@@ -57,13 +58,14 @@ urlpatterns = [
     
     # Perfiles
     path('perfil/editar/', talenTracker.editar_perfil_empleado, name='editar_perfil_empleado'),
+    path('perfil/profesional/editar/', talenTracker.editar_perfil_profesional, name='editar_perfil_profesional'),
     path('perfil/', talenTracker.ver_perfil_empleado, name='ver_perfil_empleado'),
     path('empresa/oferta/<int:oferta_id>/postulante/<int:usuario_id>/', talenTracker.ver_detalle_postulante, name='ver_detalle_postulante'),
 
     # URLs para tracking y recomendaciones
     path('iniciar-vista/<int:oferta_id>/', talenTracker.iniciar_vista_oferta, name='iniciar_vista_oferta'),
     path('finalizar-vista/<int:vista_id>/', talenTracker.finalizar_vista_oferta, name='finalizar_vista_oferta'),
-    path('recomendaciones/', talenTracker.obtener_recomendaciones, name='recomendaciones'),
+    path('recomendaciones/', talenTracker.recomendaciones, name='recomendaciones'),
 ]
 
 # Configuración para servir archivos media en desarrollo

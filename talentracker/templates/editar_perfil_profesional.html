@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow">
+        <h1 class="text-2xl font-bold mb-6">Editar Perfil Profesional</h1>
+        
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+            <div class="p-4 {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %} rounded">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Habilidades -->
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">
+                    {{ form.habilidades.label }}
+                </label>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+                    {% for value, text in form.habilidades.field.choices %}
+                    <div class="flex items-start space-x-2">
+                        <input type="checkbox" 
+                               name="{{ form.habilidades.name }}" 
+                               value="{{ value }}"
+                               id="id_habilidad_{{ forloop.counter }}"
+                               class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                               {% if value in form.habilidades.value %}checked{% endif %}>
+                        <label for="id_habilidad_{{ forloop.counter }}" 
+                               class="text-sm text-gray-700 cursor-pointer">
+                            {{ text }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                {% if form.habilidades.help_text %}
+                <p class="text-sm text-gray-500">{{ form.habilidades.help_text }}</p>
+                {% endif %}
+                
+                {% if form.habilidades.errors %}
+                <div class="text-red-500 text-sm">
+                    {% for error in form.habilidades.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Otros campos -->
+            {% for field in form %}
+            {% if field.name != 'habilidades' %}
+            <div class="space-y-2">
+                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    {{ field.label }}
+                </label>
+                
+                <div class="mt-1">
+                    {{ field }}
+                </div>
+                
+                {% if field.help_text %}
+                <p class="text-sm text-gray-500">{{ field.help_text }}</p>
+                {% endif %}
+                
+                {% if field.errors %}
+                <div class="text-red-500 text-sm">
+                    {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            
+            <div class="flex justify-end space-x-4">
+                <a href="{% url 'ver_perfil_empleado' %}" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    Cancelar
+                </a>
+                <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Estilos para los campos select */
+    select {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid #D1D5DB;
+    }
+    
+    /* Estilos para los campos input */
+    input[type="text"] {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid #D1D5DB;
+    }
+    
+    input:focus, select:focus {
+        outline: none;
+        border-color: #2563EB;
+        ring: 2px;
+        ring-color: #93C5FD;
+    }
+    
+    /* Estilos para los checkboxes */
+    .form-checkbox:checked {
+        background-color: #2563EB;
+        border-color: #2563EB;
+    }
+    
+    .form-checkbox:focus {
+        outline: none;
+        ring: 2px;
+        ring-color: #93C5FD;
+    }
+</style>
+{% endblock %} 

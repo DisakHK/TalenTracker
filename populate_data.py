@@ -12,7 +12,7 @@ django.setup()
 from django.contrib.auth import get_user_model
 from talentracker.models import (
     Usuario, PerfilEmpresa, OfertaTrabajo, Postulacion, 
-    LikeOferta, VistaOferta, ConfiguracionNotificaciones
+    LikeOferta, VistaOferta, ConfiguracionNotificaciones, PerfilProfesional
 )
 
 def populate():
@@ -350,122 +350,147 @@ def create_empleados():
         {
             'username': 'juan_perez',
             'email': 'juan.perez@example.com',
-            'password': 'juan2023',
+            'password': 'empleado2023',
             'first_name': 'Juan',
             'last_name': 'Pérez',
-            'telefono': '+56 9 1234 5678',
-            'fecha_nacimiento': '1990-01-15',
-            'genero': 'M',
-            'biografia': 'Ingeniero en informática con experiencia en desarrollo web.'
+            'perfil': {
+                'habilidades': ['Python', 'Django', 'JavaScript', 'React', 'SQL'],
+                'nivel_experiencia': 'intermedio',
+                'ubicacion': 'Santiago',
+                'preferencia_modalidad': 'mixto',
+                'nivel_academico': 'universitario'
+            }
         },
         {
             'username': 'maria_rodriguez',
             'email': 'maria.rodriguez@example.com',
-            'password': 'maria2023',
+            'password': 'empleado2023',
             'first_name': 'María',
             'last_name': 'Rodríguez',
-            'telefono': '+56 9 8765 4321',
-            'fecha_nacimiento': '1992-05-20',
-            'genero': 'F',
-            'biografia': 'Enfermera profesional especializada en cuidados intensivos.'
+            'perfil': {
+                'habilidades': ['Java', 'Spring', 'Angular', 'MongoDB'],
+                'nivel_experiencia': 'senior',
+                'ubicacion': 'Santiago',
+                'preferencia_modalidad': 'remoto',
+                'nivel_academico': 'universitario'
+            }
         },
         {
             'username': 'carlos_gonzalez',
             'email': 'carlos.gonzalez@example.com',
-            'password': 'carlos2023',
+            'password': 'empleado2023',
             'first_name': 'Carlos',
             'last_name': 'González',
-            'telefono': '+56 9 5555 1234',
-            'fecha_nacimiento': '1988-09-10',
-            'genero': 'M',
-            'biografia': 'Contador auditor con 8 años de experiencia en el sector financiero.'
+            'perfil': {
+                'habilidades': ['PHP', 'Laravel', 'MySQL', 'Vue.js'],
+                'nivel_experiencia': 'junior',
+                'ubicacion': 'Valparaíso',
+                'preferencia_modalidad': 'presencial',
+                'nivel_academico': 'tecnico'
+            }
         },
         {
             'username': 'ana_martinez',
             'email': 'ana.martinez@example.com',
-            'password': 'ana2023',
+            'password': 'empleado2023',
             'first_name': 'Ana',
             'last_name': 'Martínez',
-            'telefono': '+56 9 4444 5555',
-            'fecha_nacimiento': '1995-03-25',
-            'genero': 'F',
-            'biografia': 'Diseñadora UX/UI apasionada por crear experiencias digitales.'
+            'perfil': {
+                'habilidades': ['Ruby', 'Rails', 'PostgreSQL', 'React'],
+                'nivel_experiencia': 'intermedio',
+                'ubicacion': 'Concepción',
+                'preferencia_modalidad': 'mixto',
+                'nivel_academico': 'universitario'
+            }
         },
         {
             'username': 'pedro_sanchez',
             'email': 'pedro.sanchez@example.com',
-            'password': 'pedro2023',
+            'password': 'empleado2023',
             'first_name': 'Pedro',
             'last_name': 'Sánchez',
-            'telefono': '+56 9 7777 8888',
-            'fecha_nacimiento': '1985-11-05',
-            'genero': 'M',
-            'biografia': 'Profesor de matemáticas con experiencia en educación secundaria y superior.'
+            'perfil': {
+                'habilidades': ['C#', '.NET', 'SQL Server', 'Azure'],
+                'nivel_experiencia': 'senior',
+                'ubicacion': 'Santiago',
+                'preferencia_modalidad': 'presencial',
+                'nivel_academico': 'posgrado'
+            }
         },
         {
             'username': 'laura_diaz',
             'email': 'laura.diaz@example.com',
-            'password': 'laura2023',
+            'password': 'empleado2023',
             'first_name': 'Laura',
             'last_name': 'Díaz',
-            'telefono': '+56 9 3333 2222',
-            'fecha_nacimiento': '1993-07-18',
-            'genero': 'F',
-            'biografia': 'Ingeniera comercial especializada en análisis de datos y finanzas.'
+            'perfil': {
+                'habilidades': ['Python', 'FastAPI', 'MongoDB', 'Vue.js'],
+                'nivel_experiencia': 'intermedio',
+                'ubicacion': 'Viña del Mar',
+                'preferencia_modalidad': 'remoto',
+                'nivel_academico': 'universitario'
+            }
         },
         {
             'username': 'diego_lopez',
             'email': 'diego.lopez@example.com',
-            'password': 'diego2023',
+            'password': 'empleado2023',
             'first_name': 'Diego',
             'last_name': 'López',
-            'telefono': '+56 9 6666 7777',
-            'fecha_nacimiento': '1991-12-30',
-            'genero': 'M',
-            'biografia': 'Desarrollador backend con conocimientos en Python, Java y bases de datos.'
+            'perfil': {
+                'habilidades': ['JavaScript', 'Node.js', 'Express', 'MongoDB'],
+                'nivel_experiencia': 'junior',
+                'ubicacion': 'Santiago',
+                'preferencia_modalidad': 'mixto',
+                'nivel_academico': 'tecnico'
+            }
         },
         {
             'username': 'sofia_torres',
             'email': 'sofia.torres@example.com',
-            'password': 'sofia2023',
+            'password': 'empleado2023',
             'first_name': 'Sofía',
             'last_name': 'Torres',
-            'telefono': '+56 9 9999 0000',
-            'fecha_nacimiento': '1994-04-12',
-            'genero': 'F',
-            'biografia': 'Psicóloga clínica con enfoque en terapia cognitivo-conductual.'
+            'perfil': {
+                'habilidades': ['Java', 'Kotlin', 'Android', 'Firebase'],
+                'nivel_experiencia': 'senior',
+                'ubicacion': 'Antofagasta',
+                'preferencia_modalidad': 'remoto',
+                'nivel_academico': 'universitario'
+            }
         },
         {
             'username': 'javier_navarro',
             'email': 'javier.navarro@example.com',
-            'password': 'javier2023',
+            'password': 'empleado2023',
             'first_name': 'Javier',
             'last_name': 'Navarro',
-            'telefono': '+56 9 2222 3333',
-            'fecha_nacimiento': '1987-08-22',
-            'genero': 'M',
-            'biografia': 'Técnico en administración con experiencia en logística y operaciones.'
+            'perfil': {
+                'habilidades': ['Swift', 'iOS', 'Objective-C', 'Firebase'],
+                'nivel_experiencia': 'intermedio',
+                'ubicacion': 'Santiago',
+                'preferencia_modalidad': 'presencial',
+                'nivel_academico': 'universitario'
+            }
         },
         {
             'username': 'carolina_munoz',
             'email': 'carolina.munoz@example.com',
-            'password': 'carolina2023',
+            'password': 'empleado2023',
             'first_name': 'Carolina',
             'last_name': 'Muñoz',
-            'telefono': '+56 9 8888 1111',
-            'fecha_nacimiento': '1996-02-08',
-            'genero': 'F',
-            'biografia': 'Periodista especializada en medios digitales y redes sociales.'
-        }
+            'perfil': {
+                'habilidades': ['Python', 'Django', 'React', 'AWS'],
+                'nivel_experiencia': 'senior',
+                'ubicacion': 'Santiago',
+                'preferencia_modalidad': 'mixto',
+                'nivel_academico': 'posgrado'
+            }
+        },
     ]
     
     for empleado_data in empleados_data:
         try:
-            fecha_nacimiento = None
-            if 'fecha_nacimiento' in empleado_data:
-                from datetime import datetime
-                fecha_nacimiento = datetime.strptime(empleado_data['fecha_nacimiento'], '%Y-%m-%d').date()
-            
             empleado, created = Usuario.objects.get_or_create(
                 username=empleado_data['username'],
                 defaults={
@@ -473,20 +498,22 @@ def create_empleados():
                     'first_name': empleado_data['first_name'],
                     'last_name': empleado_data['last_name'],
                     'tipo_usuario': 'empleado',
-                    'telefono': empleado_data.get('telefono'),
-                    'fecha_nacimiento': fecha_nacimiento,
-                    'genero': empleado_data.get('genero'),
-                    'biografia': empleado_data.get('biografia'),
                 }
             )
             
             if created:
                 empleado.set_password(empleado_data['password'])
                 empleado.save()
-            
-            # Crear configuración de notificaciones
-            ConfiguracionNotificaciones.objects.get_or_create(usuario=empleado)
-            
+                
+                # Crear perfil profesional
+                PerfilProfesional.objects.create(
+                    usuario=empleado,
+                    **empleado_data['perfil']
+                )
+                
+                # Crear configuración de notificaciones
+                ConfiguracionNotificaciones.objects.get_or_create(usuario=empleado)
+                
             empleados.append(empleado)
             print(f"Empleado creado: {empleado.username}")
         except Exception as e:

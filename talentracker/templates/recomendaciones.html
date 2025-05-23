@@ -3,151 +3,139 @@
 {% block title %}Recomendaciones Personalizadas{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 py-8">
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-2xl font-bold text-gray-800">Recomendaciones Para Ti</h1>
-        <a href="{% url 'dashboard' %}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 transition-colors flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-            Volver al Dashboard
+<div class="container mx-auto px-4 py-8">
+    <!-- Botones de navegación -->
+    <div class="flex justify-end space-x-3 mb-6">
+        <a href="{% url 'ver_perfil_empleado' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded flex items-center">
+            <i data-lucide="user" class="h-4 w-4 mr-2"></i>
+            Mi Perfil
+        </a>
+        <a href="{% url 'favoritos' %}" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded flex items-center">
+            <i data-lucide="heart" class="h-4 w-4 mr-2"></i>
+            Favoritos
+        </a>
+        <a href="{% url 'dashboard' %}" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded flex items-center">
+            <i data-lucide="layout-dashboard" class="h-4 w-4 mr-2"></i>
+            Dashboard
         </a>
     </div>
-    
-    <!-- Explicación del algoritmo -->
-    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-md">
+
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Recomendaciones Para Ti</h1>
+    </div>
+
+    <!-- Mensaje informativo -->
+    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6">
         <div class="flex">
             <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                 </svg>
             </div>
             <div class="ml-3">
-                <p class="text-sm text-blue-700">
+                <p class="text-sm text-green-700">
                     Estas recomendaciones están personalizadas según tus interacciones, preferencias y postulaciones previas. Cuanto más navegues en el portal, mejores serán tus recomendaciones.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Lista de ofertas recomendadas -->
+    <!-- Lista de ofertas -->
     <div class="space-y-6">
-        {% if ofertas %}
-            {% for oferta in ofertas %}
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow" data-oferta-id="{{ oferta.id }}">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-gray-900">{{ oferta.titulo }}</h3>
-                                <p class="text-gray-600 mt-1 mb-2 line-clamp-2">{{ oferta.descripcion }}</p>
-                                <div class="flex flex-wrap gap-2 text-sm text-gray-500 mb-3">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                        {{ oferta.get_industria_display|default:oferta.industria|capfirst }}
-                                    </span>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        {{ oferta.ubicacion }}
-                                    </span>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                        </svg>
-                                        {{ oferta.nivel_experiencia|capfirst }}
-                                    </span>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                        </svg>
-                                        {{ oferta.remoto|capfirst }}
-                                    </span>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                                            <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                                        </svg>
-                                        {{ oferta.nivel_academico|capfirst }}
-                                    </span>
-                                </div>
-
-                                {% if oferta.habilidades %}
-                                <div class="mt-2">
-                                    <p class="text-xs text-gray-500 mb-1">Habilidades requeridas:</p>
-                                    <div class="flex flex-wrap gap-1">
-                                        {% for habilidad in oferta.habilidades %}
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                            {{ habilidad }}
-                                        </span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
+        {% for oferta, puntuacion in ofertas_con_puntuacion %}
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <h2 class="text-xl font-semibold mb-2">{{ oferta.titulo }}</h2>
+                    <p class="text-gray-600 mb-4">{{ oferta.descripcion|truncatewords:30 }}</p>
+                    
+                    <!-- Detalles principales -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <span class="text-gray-500 text-sm">Industria</span>
+                            <p class="font-medium">{{ oferta.get_industria_display }}</p>
                         </div>
-                        
-                        <div class="mt-4 flex justify-between items-center border-t border-gray-100 pt-4">
-                            <div class="text-sm text-gray-500">
-                                <span>Publicado: {{ oferta.fecha_creacion|date:"d/m/Y" }}</span>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button type="button" class="like-btn p-2 rounded-full hover:bg-gray-100 transition-colors" data-oferta-id="{{ oferta.id }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 heart-icon transition-transform duration-200 {% if oferta.id in likes %}text-red-500 fill-current{% else %}text-gray-400{% endif %}" viewBox="0 0 24 24" stroke="currentColor" fill="none">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                    </svg>
-                                </button>
-                                <a href="{% url 'dashboard' %}" class="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-sm font-medium transition-colors view-details" data-oferta-id="{{ oferta.id }}">
-                                    Ver detalles
-                                </a>
-                                <form method="post" action="{% url 'postular' oferta.id %}" class="inline postular-form">
-                                    {% csrf_token %}
-                                    <button type="submit" class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-sm font-medium transition-colors {% if oferta.id in postuladas %}opacity-50 cursor-not-allowed{% endif %}" {% if oferta.id in postuladas %}disabled{% endif %}>
-                                        {% if oferta.id in postuladas %}Postulado{% else %}Postularme{% endif %}
-                                    </button>
-                                </form>
-                            </div>
+                        <div>
+                            <span class="text-gray-500 text-sm">Ubicación</span>
+                            <p class="font-medium">{{ oferta.ubicacion }}</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-sm">Experiencia</span>
+                            <p class="font-medium">{{ oferta.get_nivel_experiencia_display }}</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-sm">Modalidad</span>
+                            <p class="font-medium">{{ oferta.get_remoto_display }}</p>
                         </div>
                     </div>
+
+                    <!-- Habilidades -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% for habilidad in oferta.habilidades %}
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                            {{ habilidad }}
+                        </span>
+                        {% endfor %}
+                    </div>
                 </div>
-            {% endfor %}
-        {% else %}
-            <div class="bg-white rounded-lg shadow-md p-8 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">No hay recomendaciones disponibles</h3>
-                <p class="text-gray-600">Explora más ofertas e interactúa con ellas para recibir recomendaciones personalizadas.</p>
-                <a href="{% url 'dashboard' %}" class="inline-flex items-center mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    Explorar Ofertas
-                </a>
+
+                <!-- Porcentaje de coincidencia -->
+                <div class="ml-6 flex flex-col items-center">
+                    <div class="w-20 h-20 rounded-full border-4 border-green-500 flex items-center justify-center mb-2">
+                        <span class="text-xl font-bold text-green-600">{{ puntuacion }}%</span>
+                    </div>
+                    <span class="text-sm text-gray-500">Coincidencia</span>
+                </div>
             </div>
-        {% endif %}
+
+            <!-- Botones de acción -->
+            <div class="flex justify-end items-center space-x-4 mt-4 pt-4 border-t">
+                <button data-oferta-id="{{ oferta.id }}" 
+                        class="like-button px-4 py-2 border border-gray-300 rounded-md text-sm font-medium {% if oferta.id in likes %}text-red-600 hover:text-red-700{% else %}text-gray-700 hover:text-gray-800{% endif %} hover:bg-gray-50">
+                    {% if oferta.id in likes %}
+                    ❤️ Guardado
+                    {% else %}
+                    🤍 Guardar
+                    {% endif %}
+                </button>
+                
+                <a href="{% url 'ver_detalle_oferta' oferta.id %}" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-gray-50 flex items-center">
+                    <i data-lucide="eye" class="h-4 w-4 mr-2"></i>
+                    Ver detalles
+                </a>
+
+                {% if oferta.id not in postuladas %}
+                <form action="{% url 'postular' oferta.id %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                        Postularme
+                    </button>
+                </form>
+                {% else %}
+                <button disabled class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-400 cursor-not-allowed">
+                    Ya postulado
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-8">
+            <p class="text-gray-500">No hay ofertas disponibles en este momento.</p>
+        </div>
+        {% endfor %}
     </div>
 </div>
+{% endblock %}
 
+{% block extra_scripts %}
 <script>
-    // Script para registrar cuando un usuario comienza a ver los detalles de una oferta
-    document.addEventListener('DOMContentLoaded', function() {
-        const ofertaCards = document.querySelectorAll('[data-oferta-id]');
-        const viewDetailsLinks = document.querySelectorAll('.view-details');
-        const likeButtons = document.querySelectorAll('.like-btn');
-        const postularForms = document.querySelectorAll('.postular-form');
-        let vistasActivas = {};
-        
-        // Función para inicializar el tracking de vista
-        function iniciarVista(ofertaId) {
-            if (vistasActivas[ofertaId]) return; // Evitar iniciar múltiples vistas para la misma oferta
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar los botones de like
+    document.querySelectorAll('.like-button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const ofertaId = this.getAttribute('data-oferta-id');
             
-            fetch(`/iniciar-vista/${ofertaId}/`, {
+            fetch(`/toggle-like/${ofertaId}/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}',
@@ -157,114 +145,40 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.status === 'success') {
-                    vistasActivas[ofertaId] = {
-                        vistaId: data.vista_id,
-                        timestamp: data.timestamp
-                    };
-                    console.log(`Vista iniciada para oferta ${ofertaId}`);
+                if (data.status === 'liked') {
+                    this.innerHTML = '❤️ Guardado';
+                    this.classList.add('text-red-600', 'hover:text-red-700');
+                    this.classList.remove('text-gray-700', 'hover:text-gray-800');
+                    showNotification('Oferta agregada a favoritos', 'success');
+                } else if (data.status === 'unliked') {
+                    this.innerHTML = '🤍 Guardar';
+                    this.classList.remove('text-red-600', 'hover:text-red-700');
+                    this.classList.add('text-gray-700', 'hover:text-gray-800');
+                    showNotification('Oferta eliminada de favoritos', 'info');
                 }
             })
-            .catch(error => console.error('Error al iniciar vista:', error));
-        }
-        
-        // Función para finalizar el tracking de vista
-        function finalizarVista(ofertaId) {
-            if (!vistasActivas[ofertaId]) return;
-            
-            const vistaInfo = vistasActivas[ofertaId];
-            
-            fetch(`/finalizar-vista/${vistaInfo.vistaId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log(`Vista finalizada para oferta ${ofertaId}, duración: ${data.duracion}s`);
-                    delete vistasActivas[ofertaId];
-                }
-            })
-            .catch(error => console.error('Error al finalizar vista:', error));
-        }
-        
-        // Listener para eventos de like
-        likeButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const ofertaId = this.getAttribute('data-oferta-id');
-                const heartIcon = this.querySelector('.heart-icon');
-
-                // Añadir efecto de pulsación
-                heartIcon.classList.add('scale-125');
-                setTimeout(() => {
-                    heartIcon.classList.remove('scale-125');
-                }, 200);
-
-                fetch(`/toggle-like/${ofertaId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'same-origin'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'liked') {
-                        heartIcon.classList.add('text-red-500', 'fill-current');
-                        console.log(`Like agregado a oferta ${ofertaId}`);
-                    } else if (data.status === 'unliked') {
-                        heartIcon.classList.remove('text-red-500', 'fill-current');
-                        console.log(`Like removido de oferta ${ofertaId}`);
-                    }
-                })
-                .catch(error => console.error('Error en toggle-like:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Error al procesar tu solicitud', 'error');
             });
-        });
-        
-        // Listener para los botones "Ver detalles"
-        viewDetailsLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const ofertaId = this.getAttribute('data-oferta-id');
-                console.log(`Viendo detalles de oferta ${ofertaId}`);
-                
-                // Aquí puedes redirigir a una página de detalles o mostrar un modal
-                // Por ahora, como ejemplo lo redirigimos al dashboard
-                window.location.href = `${window.location.origin}/dashboard/?oferta=${ofertaId}`;
-            });
-        });
-        
-        // Observador de intersección para detectar cuando una tarjeta de oferta es visible en pantalla
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const ofertaId = entry.target.getAttribute('data-oferta-id');
-                    
-                    if (entry.isIntersecting) {
-                        iniciarVista(ofertaId);
-                    } else {
-                        finalizarVista(ofertaId);
-                    }
-                });
-            }, { threshold: 0.5 }); // La tarjeta debe ser 50% visible
-            
-            ofertaCards.forEach(card => {
-                observer.observe(card);
-            });
-        }
-        
-        // Finalizar todas las vistas activas cuando el usuario deja la página
-        window.addEventListener('beforeunload', () => {
-            for (const ofertaId in vistasActivas) {
-                finalizarVista(ofertaId);
-            }
         });
     });
+
+    // Función para mostrar notificaciones
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 ${
+            type === 'success' ? 'bg-green-500' :
+            type === 'error' ? 'bg-red-500' :
+            'bg-blue-500'
+        } text-white`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+});
 </script>
 {% endblock %} 

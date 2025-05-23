@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import FileExtensionValidator
 from django.forms import inlineformset_factory
-from .models import Usuario, PreguntaPerfil, OpcionPregunta, PerfilEmpresa, OfertaTrabajo, ConfiguracionNotificaciones, PreferenciaBusqueda
+from .models import Usuario, PreguntaPerfil, OpcionPregunta, PerfilEmpresa, OfertaTrabajo, ConfiguracionNotificaciones, PreferenciaBusqueda, PerfilProfesional
 
 # --- Formulario de registro para EMPLEADOS (tu versión original sin el campo "tipo_usuario") ---
 class RegistroEmpleadoForm(UserCreationForm):
@@ -313,3 +313,89 @@ class EditarPerfilEmpleadoForm(forms.ModelForm):
             'first_name': 'Nombre',
             'last_name': 'Apellido',
         }
+
+class EditarPerfilProfesionalForm(forms.ModelForm):
+    HABILIDADES_CHOICES = [
+        # Tecnología
+        ('Python', 'Python'),
+        ('Java', 'Java'),
+        ('JavaScript', 'JavaScript'),
+        ('SQL', 'SQL'),
+        ('DevOps', 'DevOps'),
+        ('React', 'React'),
+        ('Node.js', 'Node.js'),
+        ('AWS', 'AWS'),
+        ('Django', 'Django'),
+        ('Angular', 'Angular'),
+        ('Vue.js', 'Vue.js'),
+        ('PHP', 'PHP'),
+        ('Ruby', 'Ruby'),
+        ('C#', 'C#'),
+        ('.NET', '.NET'),
+        ('iOS', 'iOS'),
+        ('Android', 'Android'),
+        ('Docker', 'Docker'),
+        ('Kubernetes', 'Kubernetes'),
+        ('Git', 'Git'),
+        
+        # Habilidades blandas
+        ('Comunicación', 'Comunicación'),
+        ('Liderazgo', 'Liderazgo'),
+        ('Trabajo en equipo', 'Trabajo en equipo'),
+        ('Resolución de problemas', 'Resolución de problemas'),
+        ('Creatividad', 'Creatividad'),
+        ('Adaptabilidad', 'Adaptabilidad'),
+        ('Gestión del tiempo', 'Gestión del tiempo'),
+        
+        # Finanzas
+        ('Excel', 'Excel'),
+        ('Contabilidad', 'Contabilidad'),
+        ('Análisis financiero', 'Análisis financiero'),
+        ('SAP', 'SAP'),
+        ('Gestión de riesgos', 'Gestión de riesgos'),
+        
+        # Educación
+        ('Pedagogía', 'Pedagogía'),
+        ('Diseño curricular', 'Diseño curricular'),
+        ('Gestión del aula', 'Gestión del aula'),
+        ('E-learning', 'E-learning'),
+        
+        # Servicios
+        ('Atención al cliente', 'Atención al cliente'),
+        ('Ventas', 'Ventas'),
+        ('Marketing', 'Marketing'),
+        ('Gestión de proyectos', 'Gestión de proyectos'),
+    ]
+
+    habilidades = forms.MultipleChoiceField(
+        choices=HABILIDADES_CHOICES,
+        required=True,
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-checkbox'}),
+        help_text="Selecciona todas las habilidades que posees"
+    )
+
+    class Meta:
+        model = PerfilProfesional
+        fields = [
+            'habilidades', 'nivel_experiencia', 'ubicacion',
+            'preferencia_modalidad', 'nivel_academico'
+        ]
+        widgets = {
+            'ubicacion': forms.TextInput(attrs={'placeholder': 'Ej: Santiago, Chile'}),
+        }
+        labels = {
+            'nivel_experiencia': 'Nivel de experiencia',
+            'ubicacion': 'Ciudad donde buscas trabajo',
+            'preferencia_modalidad': 'Modalidad de trabajo preferida',
+            'nivel_academico': 'Nivel académico'
+        }
+        help_texts = {
+            'ubicacion': 'Ingresa la ciudad donde buscas trabajo',
+            'nivel_experiencia': 'Selecciona tu nivel de experiencia actual',
+            'preferencia_modalidad': 'Selecciona tu modalidad de trabajo preferida',
+            'nivel_academico': 'Selecciona tu nivel de estudios más alto completado'
+        }
+
+    def clean_habilidades(self):
+        habilidades = self.cleaned_data.get('habilidades', [])
+        return list(habilidades)  # Convertir a lista para almacenar en JSONField

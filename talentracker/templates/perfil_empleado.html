@@ -3,112 +3,114 @@
 {% block title %}Mi Perfil{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto mt-10 px-4">
-    <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
-        <div class="bg-blue-600 text-white px-6 py-4 flex justify-between items-center">
-            <h2 class="text-2xl font-semibold">Mi Perfil</h2>
-            <a href="{% url 'editar_perfil_empleado' %}" class="bg-white text-blue-600 hover:bg-blue-100 px-4 py-2 rounded font-medium transition">Editar Perfil</a>
-        </div>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Información Personal -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="flex justify-between items-start mb-4">
+                <h1 class="text-2xl font-bold">Perfil de {{ usuario.get_full_name }}</h1>
+                <div class="space-x-2">
+                    <a href="{% url 'editar_perfil_empleado' %}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Editar Información Personal
+                    </a>
+                    <a href="{% url 'editar_perfil_profesional' %}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                        Editar Perfil Profesional
+                    </a>
+                </div>
+            </div>
 
-        <div class="px-6 py-8">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="mb-4 p-4 rounded text-white {% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'error' %}bg-red-500{% else %}bg-gray-500{% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Información Personal -->
                 <div>
-                    <h3 class="text-xl font-semibold text-blue-600 mb-4">Información Personal</h3>
-                    <dl class="space-y-2 text-gray-700">
-                        <div>
-                            <dt class="font-medium">Nombre:</dt>
-                            <dd>{{ usuario.get_full_name|default:"No especificado" }}</dd>
-                        </div>
-                        <div>
-                            <dt class="font-medium">Usuario:</dt>
-                            <dd>{{ usuario.username }}</dd>
-                        </div>
-                        <div>
-                            <dt class="font-medium">Email:</dt>
-                            <dd>{{ usuario.email }}</dd>
-                        </div>
-                        <div>
-                            <dt class="font-medium">Teléfono:</dt>
-                            <dd>{{ usuario.telefono|default:"No especificado" }}</dd>
-                        </div>
-                        <div>
-                            <dt class="font-medium">Fecha de nacimiento:</dt>
-                            <dd>{{ usuario.fecha_nacimiento|date:"d/m/Y"|default:"No especificada" }}</dd>
-                        </div>
-                        <div>
-                            <dt class="font-medium">Género:</dt>
-                            <dd>
-                                {% if usuario.genero == 'M' %}
-                                    Masculino
-                                {% elif usuario.genero == 'F' %}
-                                    Femenino
-                                {% elif usuario.genero == 'O' %}
-                                    Otro
-                                {% else %}
-                                    No especificado
-                                {% endif %}
-                            </dd>
-                        </div>
-                    </dl>
-                </div>
-
-                <!-- Curriculum y Biografía -->
-                <div>
-                    <h3 class="text-xl font-semibold text-blue-600 mb-4">Currículum</h3>
-                    {% if usuario.curriculum %}
-                        <a href="{{ usuario.curriculum.url }}" target="_blank" class="inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition">
-                            <i class="fa fa-file-pdf mr-2"></i> Ver Curriculum
-                        </a>
-                    {% else %}
-                        <p class="text-gray-500">No has subido tu currículum aún.</p>
-                    {% endif %}
-
-                    <h3 class="text-xl font-semibold text-blue-600 mt-6 mb-2">Biografía</h3>
-                    {% if usuario.biografia %}
-                        <p class="text-gray-700">{{ usuario.biografia }}</p>
-                    {% else %}
-                        <p class="text-gray-500">No has añadido una biografía o resumen profesional.</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Postulaciones -->
-            <div class="mt-10 pt-6 border-t">
-                <h3 class="text-xl font-semibold text-blue-600 mb-4">Mis Postulaciones</h3>
-                {% if postulaciones %}
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full text-left text-gray-700">
-                            <thead>
-                                <tr class="bg-blue-100 text-blue-800">
-                                    <th class="px-4 py-2 font-medium">Oferta</th>
-                                    <th class="px-4 py-2 font-medium">Empresa</th>
-                                    <th class="px-4 py-2 font-medium">Fecha</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for postulacion in postulaciones %}
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="px-4 py-2">{{ postulacion.oferta.titulo }}</td>
-                                        <td class="px-4 py-2">{{ postulacion.oferta.empresa.username }}</td>
-                                        <td class="px-4 py-2">{{ postulacion.fecha_postulacion|date:"d/m/Y H:i" }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <h2 class="text-lg font-semibold mb-4">Información Personal</h2>
+                    <div class="space-y-3">
+                        <p><span class="font-medium">Nombre:</span> {{ usuario.get_full_name }}</p>
+                        <p><span class="font-medium">Email:</span> {{ usuario.email }}</p>
+                        {% if usuario.telefono %}
+                        <p><span class="font-medium">Teléfono:</span> {{ usuario.telefono }}</p>
+                        {% endif %}
+                        {% if usuario.fecha_nacimiento %}
+                        <p><span class="font-medium">Fecha de nacimiento:</span> {{ usuario.fecha_nacimiento }}</p>
+                        {% endif %}
+                        {% if usuario.biografia %}
+                        <p><span class="font-medium">Biografía:</span><br>{{ usuario.biografia }}</p>
+                        {% endif %}
+                        {% if usuario.curriculum %}
+                        <p><span class="font-medium">Curriculum:</span> 
+                            <a href="{{ usuario.curriculum.url }}" class="text-blue-600 hover:underline" target="_blank">
+                                Ver curriculum
+                            </a>
+                        </p>
+                        {% endif %}
                     </div>
-                {% else %}
-                    <p class="text-gray-500">No te has postulado a ninguna oferta todavía.</p>
-                {% endif %}
+                </div>
+
+                <!-- Información Profesional -->
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Perfil Profesional</h2>
+                    {% if usuario.perfilprofesional %}
+                    <div class="space-y-3">
+                        <p>
+                            <span class="font-medium">Nivel de experiencia:</span> 
+                            {{ usuario.perfilprofesional.get_nivel_experiencia_display }}
+                        </p>
+                        <p>
+                            <span class="font-medium">Ubicación:</span>
+                            {{ usuario.perfilprofesional.ubicacion }}
+                        </p>
+                        <p>
+                            <span class="font-medium">Modalidad preferida:</span>
+                            {{ usuario.perfilprofesional.get_preferencia_modalidad_display }}
+                        </p>
+                        <p>
+                            <span class="font-medium">Nivel académico:</span>
+                            {{ usuario.perfilprofesional.get_nivel_academico_display }}
+                        </p>
+                        <div>
+                            <span class="font-medium">Habilidades:</span>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                {% for habilidad in usuario.perfilprofesional.habilidades %}
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                                    {{ habilidad }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                        <div class="flex">
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    No has completado tu perfil profesional.
+                                    <a href="{% url 'editar_perfil_profesional' %}" class="font-medium underline hover:text-yellow-600">
+                                        Completar ahora
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
+        </div>
+
+        <!-- Postulaciones -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Mis Postulaciones</h2>
+            {% if postulaciones %}
+            <div class="space-y-4">
+                {% for postulacion in postulaciones %}
+                <div class="border rounded p-4 hover:bg-gray-50">
+                    <h3 class="font-medium">{{ postulacion.oferta.titulo }}</h3>
+                    <p class="text-sm text-gray-600">{{ postulacion.oferta.empresa.get_full_name }}</p>
+                    <p class="text-sm text-gray-500">Postulado el: {{ postulacion.fecha_postulacion|date:"d/m/Y" }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-600">Aún no has realizado ninguna postulación.</p>
+            {% endif %}
         </div>
     </div>
 </div>

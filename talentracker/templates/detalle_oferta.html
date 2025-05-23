@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Encabezado -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">{{ oferta.titulo }}</h1>
+            <a href="{% url 'recomendaciones' %}" class="text-green-600 hover:text-green-800">
+                ← Volver a recomendaciones
+            </a>
+        </div>
+
+        <!-- Información principal -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Columna izquierda -->
+                <div>
+                    <h2 class="text-xl font-semibold mb-4">Detalles de la oferta</h2>
+                    <div class="space-y-3">
+                        <p><span class="font-medium">Empresa:</span> {{ oferta.empresa.get_full_name }}</p>
+                        <p><span class="font-medium">Industria:</span> {{ oferta.get_industria_display }}</p>
+                        <p><span class="font-medium">Ubicación:</span> {{ oferta.ubicacion }}</p>
+                        <p><span class="font-medium">Modalidad:</span> {{ oferta.get_remoto_display }}</p>
+                        <p><span class="font-medium">Nivel de experiencia:</span> {{ oferta.get_nivel_experiencia_display }}</p>
+                        <p><span class="font-medium">Nivel académico:</span> {{ oferta.get_nivel_academico_display }}</p>
+                        {% if oferta.salario_estimado %}
+                        <p><span class="font-medium">Salario estimado:</span> ${{ oferta.salario_estimado }}</p>
+                        {% endif %}
+                        <p><span class="font-medium">Fecha de publicación:</span> {{ oferta.fecha_creacion|date:"d/m/Y" }}</p>
+                    </div>
+                </div>
+
+                <!-- Columna derecha -->
+                <div>
+                    <h2 class="text-xl font-semibold mb-4">Habilidades requeridas</h2>
+                    <div class="flex flex-wrap gap-2">
+                        {% for habilidad in oferta.habilidades %}
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                            {{ habilidad }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mt-6">
+                <h2 class="text-xl font-semibold mb-4">Descripción</h2>
+                <div class="prose max-w-none">
+                    {{ oferta.descripcion|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Porcentaje de coincidencia -->
+            {% if puntuacion %}
+            <div class="mt-6 p-4 bg-green-50 rounded-lg">
+                <h3 class="text-lg font-semibold text-green-800">Coincidencia con tu perfil</h3>
+                <div class="flex items-center mt-2">
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="bg-green-600 h-4 rounded-full" style="width: {{ puntuacion }}%"></div>
+                    </div>
+                    <span class="ml-3 font-medium text-green-800">{{ puntuacion }}%</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Botones de acción -->
+            <div class="mt-8 flex justify-end space-x-4">
+                <button id="like-button" 
+                        data-oferta-id="{{ oferta.id }}" 
+                        class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium {% if oferta.id in likes %}text-red-600 hover:text-red-700{% else %}text-gray-700 hover:text-gray-800{% endif %} hover:bg-gray-50">
+                    {% if oferta.id in likes %}
+                    ❤️ Guardado
+                    {% else %}
+                    🤍 Guardar
+                    {% endif %}
+                </button>
+                
+                {% if oferta.id not in postuladas %}
+                <form action="{% url 'postular' oferta.id %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                        Postularme
+                    </button>
+                </form>
+                {% else %}
+                <button disabled class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-400 cursor-not-allowed">
+                    Ya postulado
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
